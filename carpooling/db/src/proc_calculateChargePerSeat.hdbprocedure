@@ -1,0 +1,15 @@
+PROCEDURE "proc_calculateChargePerSeat"( IN rideId: UUID, 
+                                         IN no_of_seats_req: INTEGER,
+                                         OUT total_charge: DECIMAL(10,2))
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+    DECLARE rideDistance DECIMAL(10,2);
+    DECLARE rideCharge DECIMAL(10,2);
+    DECLARE availableSeats INTEGER;
+    DECLARE chargePerSeat DECIMAL(10,2);
+
+    SELECT 
+END

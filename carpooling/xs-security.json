@@ -1,0 +1,30 @@
+{
+  "xsappname": "carpoolingapp",
+  "tenant-mode": "shared",
+  "scopes": [
+    {
+    "name": "$XSAPPNAME.Carpooling_Admin",
+    "description":"Admin" 
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+      {
+        "name": "Carpooling_Admin",
+        "description": "generated",
+        "scope-reference": [
+          "$XSAPPNAME.Carpooling_Admin"
+        ],
+        "attribute-reference": []
+      }
+
+  ],
+  "oauth2-configuration":{
+    "credential-types":[
+      "binding-secret"
+    ],
+    "redirect-uris":[
+      "https://*.applicationstudio.cloud.sap/**"
+    ]
+  }
+}

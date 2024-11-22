@@ -1,0 +1,73 @@
+{
+  "name": "SalesAndInventoryManagement",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/http-client": "^3.22.2",
+    "@sap-cloud-sdk/resilience": "^3.22.2",
+    "@sap/approuter": "^17.0.0",
+    "@sap/cds": "^8.4.0",
+    "@sap/cds-common-content": "^2.1.0",
+    "@sap/hana-client": "^2.22.32",
+    "@sap/hdi-deploy": "^5.3.2",
+    "@sap/xsenv": "^4.2.0",
+    "@sap/xssec": "^4",
+    "approuter": "file:app/router",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.6",
+    "@sap/cds-dk": "^8.4.1"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "start:dev": "cds run --profile development",
+    "generatewesave:default-env": "cf curl \"/v2/apps/$(cf app --guid SalesAndInventoryManagement-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana",
+        "model": "db",
+        "credentials": {}
+      },
+      "auth": {
+        "[production]": {
+          "strategy": "JWT"
+        },
+        "[development]": {
+          "kind": "mocked",
+          "users": {
+            "Alice": {
+              "roles": [
+                "Admin"
+              ]
+            },
+            "Bob": {
+              "roles": [
+                "SalesReps"
+              ]
+            },
+            "Colin": {
+              "roles": [
+                "InventoryManager"
+              ]
+            }
+          }
+        }
+      },
+      "connectivity": true,
+      "destinations": true,
+      "northwindAPI": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "Northwind"
+        }
+      }
+    }
+  }
+}

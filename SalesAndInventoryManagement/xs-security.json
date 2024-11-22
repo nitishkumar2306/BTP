@@ -1,0 +1,54 @@
+{
+  "xsappname": "SalesAndInventoryManagement-auth",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.SalesReps",
+      "description": "SalesReps"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    },
+    {
+      "name": "$XSAPPNAME.InventoryManager",
+      "description": "InventoryManager"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "SalesReps",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.SalesReps"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Admin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "InventoryManager",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.InventoryManager"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "oauth2-configuration": {
+    "credential-types": [
+      "binding-secret",
+      "x509"
+    ],
+    "redirect-uris": [
+      "https://*.applicationstudio.cloud.sap/**"
+    ]
+  }
+}

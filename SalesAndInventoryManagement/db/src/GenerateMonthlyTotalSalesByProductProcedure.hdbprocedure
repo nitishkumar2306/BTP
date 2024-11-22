@@ -1,0 +1,41 @@
+PROCEDURE "CalculateMonthlyTotalSalesByProduct"(
+    IN StartDate DATE,
+    IN EndDate DATE,
+    OUT Results TABLE (
+        ProductID INTEGER,
+        ProductName NVARCHAR(40),
+        Year INTEGER,
+        Month INTEGER,
+        TotalSales DECIMAL(15,2)
+    )
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+--DEFAULT SCHEMA <your_schema_name>
+AS
+BEGIN
+    Results = SELECT 
+        p.ProductID,
+        p.ProductName,
+        YEAR(o.OrderDate) AS Year,
+        MONTH(o.OrderDate) AS Month,
+        SUM(od.Quantity * od.UnitPrice * (1 - od.Discount)) AS TotalSales
+    FROM 
+    CatalogService_Orders AS o
+    INNER JOIN 
+    CatalogService_OrderDetails AS od ON o.OrderID = od.OrderID
+    INNER JOIN 
+    CatalogService_Products AS p ON od.ProductID = p.ProductID
+    WHERE 
+        o.OrderDate BETWEEN :StartDate AND :EndDate
+        AND o.OrderStatus != 'Cancelled'
+    GROUP BY 
+        p.ProductID,
+        p.ProductName,
+        YEAR(o.OrderDate),
+        MONTH(o.OrderDate)
+    ORDER BY 
+        p.ProductID,
+        Year,
+        Month;
+END;

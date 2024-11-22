@@ -1,0 +1,22 @@
+POST https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/restoreProductStocksBatch
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+&client_id=sb-SalesAndInventoryManagement-auth!t344633
+&client_secret=02736377-7f00-4fbf-9a66-86282012b042$rUkRNqeqtAADdP0YYJ1UbdsdL2uxnG9fj2hu52mfyKc=
+
+### Request to Application Endpoint with OAuth 2.0
+POST https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/restoreProductStocksBatch
+Content-Type: application/json
+
+{
+  "ProductUpdates": [
+    {"productID": 101, "QuantityToAdd": 10},
+    {"productID": 102, "QuantityToAdd": 15}
+  ]
+}
+
+### Request to test orders api endpoint
+GET https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/Orders
+Content-Type: application/json
+Authorization: Bearer Alice
