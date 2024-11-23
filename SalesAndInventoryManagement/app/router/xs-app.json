@@ -6,17 +6,6 @@
   },
   "routes": [
     {
-      "source": "^/app/(.*)$",
-      "target": "$1",
-      "localDir": ".",
-      "cacheControl": "no-cache, no-store, must-revalidate"
-    },
-    {
-      "source": "^/appconfig/",
-      "localDir": ".",
-      "cacheControl": "no-cache, no-store, must-revalidate"
-    },
-    {
       "source": "^/(.*)$",
       "target": "$1",
       "authenticationType": "xsuaa",
@@ -29,9 +18,14 @@
       "service": "sap-approuter-userapi"
     },
     {
-      "source": "^(.*)",
-      "localDir": "webapp",
-      "authenticationType": "xsuaa",
+      "source": "^/app/(.*)$",
+      "target": "$1",
+      "localDir": ".",
+      "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/appconfig/",
+      "localDir": ".",
       "cacheControl": "no-cache, no-store, must-revalidate"
     }
   ]

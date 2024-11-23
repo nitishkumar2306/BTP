@@ -18,7 +18,8 @@
     "@sap/xssec": "^4",
     "approuter": "file:app/router",
     "cookie": "^1.0.2",
-    "express": "^4"
+    "express": "^4",
+    "passport": "^0.7.0"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.6",
@@ -36,9 +37,7 @@
         "kind": "xsuaa"
       },
       "db": {
-        "kind": "hana",
-        "model": "db",
-        "credentials": {}
+        "kind": "hana-cloud"
       },
       "auth": {
         "[production]": {
