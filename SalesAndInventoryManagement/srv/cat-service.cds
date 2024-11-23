@@ -28,7 +28,7 @@ using SalesInventoryManagement as my from '../db/schema';
     };
 
 // @cds.persistence: 'db'
-// @(requires: 'authenticated-user')
+@(requires: 'authenticated-user')
 service CatalogService  {
     // @(restrict: [{
     //     grant: '*',
