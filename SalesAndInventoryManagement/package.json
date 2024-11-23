@@ -9,7 +9,7 @@
     "@cap-js/hana": "^1",
     "@sap-cloud-sdk/http-client": "^3.22.2",
     "@sap-cloud-sdk/resilience": "^3.22.2",
-    "@sap/approuter": "^17.0.0",
+    "@sap/approuter": "^17.1.0",
     "@sap/cds": "^8.4.0",
     "@sap/cds-common-content": "^2.1.0",
     "@sap/hana-client": "^2.22.32",
@@ -17,6 +17,7 @@
     "@sap/xsenv": "^4.2.0",
     "@sap/xssec": "^4",
     "approuter": "file:app/router",
+    "cookie": "^1.0.2",
     "express": "^4"
   },
   "devDependencies": {
@@ -26,7 +27,8 @@
   "scripts": {
     "start": "cds-serve",
     "start:dev": "cds run --profile development",
-    "generatewesave:default-env": "cf curl \"/v2/apps/$(cf app --guid SalesAndInventoryManagement-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json"
+    "generate:default-env": "cf curl \"/v2/apps/$(cf app --guid SalesAndInventoryManagement-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json",
+    "deploy:cf": "npx mbt build --mtar deploy.mtar && cf deploy ./mta_archives/deploy.mtar"
   },
   "cds": {
     "requires": {
