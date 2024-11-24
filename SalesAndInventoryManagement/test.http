@@ -20,3 +20,16 @@ Content-Type: application/json
 GET https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/Orders
 Content-Type: application/json
 Authorization: Bearer Alice
+
+### Test restoreProductStocksBatch locally
+POST http://localhost:4004/odata/v4/catalog/restoreProductStocksBatch
+Content-Type: application/json
+Authorization: Bearer Alice
+
+{
+  "ProductUpdates": [
+    {"ProductID": 101, "QuantityToAdd": 10},
+    {"ProductID": 102, "QuantityToAdd": 15}
+  ]
+}
+

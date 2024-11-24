@@ -1,6 +1,6 @@
 cds compile srv/cat-service.cds --to xsuaa > xs-security.json
-"generatewesave:default-env": "cf curl \"/v2/apps/$(cf app --guid wesave-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json"
-npm run generatewesave:default-env
+"generatedefault:default-env": "cf curl \"/v2/apps/$(cf app --guid SalesAndInventoryManagement-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json"
+npm run SalesAndInventoryManagement:default-env
 cds watch --profile hybrid
 cds bind --exec -- npm start --prefix app/router
 cf update-service SalesAndInventoryManagement-auth -c xs-security.json
