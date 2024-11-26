@@ -1,35 +1,41 @@
-POST https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/restoreProductStocksBatch
-Content-Type: application/x-www-form-urlencoded
-
-grant_type=client_credentials
-&client_id=sb-SalesAndInventoryManagement-auth!t344633
-&client_secret=02736377-7f00-4fbf-9a66-86282012b042$rUkRNqeqtAADdP0YYJ1UbdsdL2uxnG9fj2hu52mfyKc=
-
-### Request to Application Endpoint with OAuth 2.0
-POST https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/restoreProductStocksBatch
-Content-Type: application/json
-
-{
-  "ProductUpdates": [
-    {"productID": 101, "QuantityToAdd": 10},
-    {"productID": 102, "QuantityToAdd": 15}
-  ]
-}
-
 ### Request to test orders api endpoint
-GET https://port4004-workspaces-ws-zwgfb.us10.trial.applicationstudio.cloud.sap/Orders
+GET http://localhost:4004/odata/v4/catalog/Orders
 Content-Type: application/json
-Authorization: Bearer Alice
+Authorization: Basic Quint
+X-Requested-With: XMLHttpRequest
+
 
 ### Test restoreProductStocksBatch locally
 POST http://localhost:4004/odata/v4/catalog/restoreProductStocksBatch
 Content-Type: application/json
-Authorization: Bearer Alice
+Authorization: Basic Quint
+X-Requested-With: XMLHttpRequest
 
 {
   "ProductUpdates": [
-    {"ProductID": 101, "QuantityToAdd": 10},
-    {"ProductID": 102, "QuantityToAdd": 15}
+    {"ProductName": "Set I", "QuantityToAdd": 1},
+    {"ProductName": "Accessory G", "QuantityToAdd": 1}
   ]
 }
 
+### Test Order Cancellation Request
+POST http://localhost:4004/odata/v4/catalog/orderCancellationRequest
+Content-Type: application/json
+Authorization: Basic Quint
+X-Requested-With: XMLHttpRequest
+
+{
+  "orderId": "41dce8fa-4c9c-489f-97f9-89348e927f31"
+}
+
+### test updateOrderStatus action
+POST http://localhost:4004/odata/v4/catalog/updateOrderStatus
+Content-Type: application/json
+Authorization: Basic Quint
+X-Requested-With: XMLHttpRequest
+
+{
+  "orderId": "3af482bc-946a-46b6-9335-4dcfb83e6f82",
+  "newStatus": "Shipped",
+  "comments": "Hello"
+}

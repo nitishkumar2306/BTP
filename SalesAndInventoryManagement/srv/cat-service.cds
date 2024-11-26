@@ -146,11 +146,16 @@ service CatalogService  {
     action orderCancellationRequest(orderId: String) returns String;
 
     action restoreProductStocksBatch(ProductUpdates : many {
-        ProductID : Integer;
+        ProductName : String;
         QuantityToAdd : Integer;
     }) returns {
         ResultMessage : String;
     };
 
     action placeOrder(input : OrderInput) returns placeOrderReturnType;
+
+    action updateOrderStatus(orderId: String, newStatus: String, comments: String) returns{
+        message: String;
+        success: Boolean;
+    }
 }

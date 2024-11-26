@@ -1,6 +1,6 @@
 PROCEDURE "RestoreProductsBatchProcedure"(
     IN ProductUpdates TABLE(
-        productID INTEGER,
+        ProductName NVARCHAR(100),
         QuantityToAdd INTEGER
     ),
     OUT ResultMessage NVARCHAR(100)
@@ -13,7 +13,7 @@ BEGIN
 
     MERGE INTO CatalogService_Products AS p
     USING :ProductUpdates AS pu 
-    ON p.ProductID = pu.ProductID
+    ON p.productName = pu.productName
     WHEN MATCHED THEN
         UPDATE SET p.UnitsInStock = p.UnitsInStock + pu.QuantityToAdd;
     

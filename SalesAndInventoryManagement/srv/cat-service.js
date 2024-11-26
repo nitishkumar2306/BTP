@@ -1,4 +1,5 @@
 const cds = require('@sap/cds');
+const { sendMail } = require('@sap-cloud-sdk/mail-client');
 
 module.exports = cds.service.impl(async function () {
 
@@ -20,14 +21,84 @@ module.exports = cds.service.impl(async function () {
     //     return result;
     // });
 
-    this.before('UPDATE', 'CatalogService.Orders', async (req) => {
-        const { orderId, orderStatus } = req.data;
+    this.on('updateOrderStatus', async (req) => {
 
-        console.log('===== id and status values are: ', orderId, ' ', orderStatus);
+        try {
+            const { orderId, newStatus, comments } = req.data;
+            console.log('===== line num 25 req.data', req.data);
 
-        if (!orderStatus){
-            req.reject(400, 'Order status is required');
-        };
+            if (!(orderId || newStatus)) {
+                req.error(400, 'Sorry, data not found for the given Order Id and  Status provided');
+            }
+
+            const validTransactions = {
+                'Pending': ['Shipped', 'Delivered', 'Cancelled', 'Returned'],
+                'Shipped': ['Delivered', 'Cancelled', 'Returned'],
+                'Delivered': ['Returned'],
+                'Cancelled': [],
+                'Returned': []
+            }
+
+            const order = await SELECT.from('CatalogService_Orders').where({ OrderID: orderId }).columns(['OrderStatus', 'CustomerID']);
+
+            if (!order.length) {
+                return {
+                    success: false,
+                    message: `Order ${orderId} not found!`
+                };
+            }
+
+            const currentOrderStatus = order[0].ORDERSTATUS;
+
+            if (!validTransactions[currentOrderStatus]?.includes(newStatus)) {
+                return {
+                    success: false,
+                    message: `Invalid status transition from ${currentOrderStatus} to ${newStatus}`
+                }
+            }
+
+            //await UPDATE.entity('CatalogService_Orders').set({OrderStatus: newStatus}).where({OrderID: orderId});
+
+            // onerowdata = {
+            //     HistoryID: cds.utils.uuid(),
+            //     OrderID: orderId,
+            //     OldStatus: order[0].ORDERSTATUS,
+            //     NewStatus: newStatus,
+            //     createdAt: new Date(),
+            //     createdBy: req.user.id,
+            //     modifiedAt: new Date(),
+            //     modifiedBy: req.user.id
+            // };
+
+            // await cds.transaction(req).run(
+            //     INSERT.into('CatalogService_OrderStatusHistory').entries(onerowdata)
+            // );
+
+
+            try {
+                const email = await SELECT.from('CatalogService_Customers').where({ CustomerID: order[0].CUSTOMERID }).columns(['Email']);
+                //const emailService = await cds.connect.to('emailService');
+
+                //console.log('=====line 66: ',emailService);
+                const mailConfig = {
+                    to: email[0].EMAIL,
+                    subject: `Order Status Update for Order ID: ${orderId}`,
+                    text: `Dear Customer,\n\nYour order status has been updated from ${currentOrderStatus} to ${newStatus}.\n\nComments: ${comments || 'N/A'}\n\nThank you for choosing our service!`
+                };
+                //await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
+
+            } catch (error) {
+                console.error('Failed to send email notification:', error.message);
+            }
+
+            return {
+                message: `Successfully updated for the order Id ${orderId} from ${currentOrderStatus} to ${newStatus}`,
+                success: true
+            }
+        } catch (error) {
+            console.log('Found some error: ', error);
+            req.error(500, `Error finding details: ${error.message}`);
+        }
     })
 
     this.on('orderCancellationRequest', async (req) => {
@@ -50,9 +121,9 @@ module.exports = cds.service.impl(async function () {
                     return 'Sorry,Order cannot be cancelled once it is Shipped or Delivered';
                 }
 
-                await cds.transaction(req).run( UPDATE('CatalogService_Orders')
+                await cds.transaction(req).run(UPDATE('CatalogService_Orders')
                     .where({ OrderID: orderId })
-                    .set({ OrderStatus: 'Cancellled' })) ;
+                    .set({ OrderStatus: 'Cancellled' }));
 
                 return `Updated the Order Status Successfully for the Order Id ${orderId}`;
             } else {
@@ -98,32 +169,24 @@ module.exports = cds.service.impl(async function () {
     }
 
     this.on('restoreProductStocksBatch', async (req) => {
-        //const { ProductUpdates } = req.data;
         const ltt = `#ltt_${cds.utils.uuid().replace(/-/g, '')}`;
-        console.log('======req parameter check: ', req);
         try {
 
-            //const query = `CALL "A3B0E6B70CD04735BB7058780C704D3A"."RestoreProductsBatchProcedure"(PRODUCTID => ${productId}, QUANTITYTOADD => ${quantity}, RESULTMESSAGE => ?)`;
-            await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (productID INTEGER, QuantityToAdd INTEGER)`);
+            await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (ProductName NVARCHAR(100), QuantityToAdd INTEGER)`);
 
-            // Step 2: Insert data into the temporary table
-            const productUpdates = req.data.ProductUpdates.map(({ productID, QuantityToAdd }) => [productID, QuantityToAdd]);
+            const productUpdates = req.data.ProductUpdates.map(({ ProductName, QuantityToAdd }) => [ProductName, QuantityToAdd]);
+
             await cds.run(`INSERT INTO ${ltt} VALUES (?, ?)`, productUpdates);
 
-            // Step 3: Call the stored procedure with the temporary table as input
-            const query = `CALL "A3B0E6B70CD04735BB7058780C704D3A"."RestoreProductsBatchProcedure"(PRODUCTUPDATES => ${ltt}, RESULTMESSAGE => ?)`;
+            const query = `CALL "94097B236BFB4FA2B98D9CB59E50D1A7"."RestoreProductsBatchProcedure"(PRODUCTUPDATES => ${ltt}, RESULTMESSAGE => ?)`;
             const { ResultMessage } = await cds.run(query);
 
-            // Clean up by dropping the temporary table
             await cds.run(`DROP TABLE ${ltt}`);
-
-            // Step 4: Return the result message
             return { ResultMessage: ResultMessage || "Operation completed" };
-
         } catch (error) {
             req.error(500, `Error calling stored procedure: ${error.message}`);
         }
-    })
+    });
 
 
     this.on('updateInventoryAfterOrderPlacement', async (req) => {

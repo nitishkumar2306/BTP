@@ -1,6 +1,5 @@
 namespace SalesInventoryManagement;
 
-
 type OrderStatus : String enum{
     Pending;
     Shipped;
@@ -22,6 +21,7 @@ entity Customers {
         Country      : String(15);
         Phone        : String(24);
         Fax          : String(24);
+        Email : String(100) @Common.FieldControl: #Mandatory;
 
         // Association to Orders
         Orders       : Association to many Orders
@@ -46,6 +46,20 @@ entity Orders {
         // Association to OrderDetails
         OrderDetails   : Composition of many OrderDetails
                              on OrderDetails.OrderID = $self.OrderID;
+
+        // Association to history
+        histories : Composition of many OrderStatusHistory on histories.OrderID = $self.OrderID;
+}
+
+entity OrderStatusHistory {
+  key HistoryID : UUID;
+  OrderID       : UUID;
+  OldStatus     : String;
+  NewStatus     : String;
+  createdAt     : DateTime;
+  createdBy     : String;
+  modifiedAt    : DateTime;
+  modifiedBy    : String;
 }
 
 entity OrderDetails {
