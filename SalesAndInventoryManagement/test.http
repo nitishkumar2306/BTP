@@ -1,14 +1,19 @@
 ### Request to test orders api endpoint
 GET http://localhost:4004/odata/v4/catalog/Orders
 Content-Type: application/json
-Authorization: Basic Quint
+Authorization: Basic Quint:quint
 X-Requested-With: XMLHttpRequest
 
+### Request to test Customers api endpoint
+GET http://localhost:4004/odata/v4/catalog/Customers
+Content-Type: application/json
+Authorization: Basic Bob:bob
+X-Requested-With: XMLHttpRequest
 
 ### Test restoreProductStocksBatch locally
 POST http://localhost:4004/odata/v4/catalog/restoreProductStocksBatch
 Content-Type: application/json
-Authorization: Basic Quint
+Authorization: Basic Quint:quint
 X-Requested-With: XMLHttpRequest
 
 {
@@ -21,7 +26,7 @@ X-Requested-With: XMLHttpRequest
 ### Test Order Cancellation Request
 POST http://localhost:4004/odata/v4/catalog/orderCancellationRequest
 Content-Type: application/json
-Authorization: Basic Quint
+Authorization: Basic Quint:quint
 X-Requested-With: XMLHttpRequest
 
 {
@@ -31,11 +36,11 @@ X-Requested-With: XMLHttpRequest
 ### test updateOrderStatus action
 POST http://localhost:4004/odata/v4/catalog/updateOrderStatus
 Content-Type: application/json
-Authorization: Basic Quint
+Authorization: Basic Quint:quint
 X-Requested-With: XMLHttpRequest
 
 {
-  "orderId": "3af482bc-946a-46b6-9335-4dcfb83e6f82",
-  "newStatus": "Shipped",
+  "orderId": "12ce72bf-6cf4-4885-9cc1-3d9e7bfae35c",
+  "newStatus": "Returned",
   "comments": "Hello"
 }

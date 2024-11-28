@@ -1,4 +1,5 @@
 namespace SalesInventoryManagement;
+using { managed } from '@sap/cds/common';
 
 type OrderStatus : String enum{
     Pending;
@@ -51,7 +52,7 @@ entity Orders {
         histories : Composition of many OrderStatusHistory on histories.OrderID = $self.OrderID;
 }
 
-entity OrderStatusHistory {
+entity OrderStatusHistory : managed{
   key HistoryID : UUID;
   OrderID       : UUID;
   OldStatus     : String;

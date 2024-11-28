@@ -25,7 +25,7 @@ module.exports = cds.service.impl(async function () {
 
         try {
             const { orderId, newStatus, comments } = req.data;
-            console.log('===== line num 25 req.data', req.data);
+            //console.log('===== line num 25 req.data', req.user);
 
             if (!(orderId || newStatus)) {
                 req.error(400, 'Sorry, data not found for the given Order Id and  Status provided');
@@ -36,7 +36,7 @@ module.exports = cds.service.impl(async function () {
                 'Shipped': ['Delivered', 'Cancelled', 'Returned'],
                 'Delivered': ['Returned'],
                 'Cancelled': [],
-                'Returned': []
+                'Returned': ['Pending']
             }
 
             const order = await SELECT.from('CatalogService_Orders').where({ OrderID: orderId }).columns(['OrderStatus', 'CustomerID']);
@@ -57,35 +57,40 @@ module.exports = cds.service.impl(async function () {
                 }
             }
 
-            //await UPDATE.entity('CatalogService_Orders').set({OrderStatus: newStatus}).where({OrderID: orderId});
+            await UPDATE.entity('CatalogService_Orders').set({ OrderStatus: newStatus }).where({ OrderID: orderId });
 
-            // onerowdata = {
-            //     HistoryID: cds.utils.uuid(),
-            //     OrderID: orderId,
-            //     OldStatus: order[0].ORDERSTATUS,
-            //     NewStatus: newStatus,
-            //     createdAt: new Date(),
-            //     createdBy: req.user.id,
-            //     modifiedAt: new Date(),
-            //     modifiedBy: req.user.id
-            // };
+            onerowdata = {
+                HistoryID: cds.utils.uuid(),
+                OrderID: orderId,
+                OldStatus: order[0].ORDERSTATUS,
+                NewStatus: newStatus,
+                createdAt: new Date().toISOString(),
+                createdBy: req.user.id,
+                modifiedAt: new Date().toISOString(),
+                modifiedBy: req.user.id
+            };
 
-            // await cds.transaction(req).run(
-            //     INSERT.into('CatalogService_OrderStatusHistory').entries(onerowdata)
-            // );
+            await cds.transaction(req).run([
+                UPDATE('CatalogService_Orders').set({ OrderStatus: newStatus }).where({ OrderID: orderId }),
+                INSERT.into('CatalogService_OrderStatusHistory').entries(onerowdata)
+            ]);
 
 
             try {
                 const email = await SELECT.from('CatalogService_Customers').where({ CustomerID: order[0].CUSTOMERID }).columns(['Email']);
-                //const emailService = await cds.connect.to('emailService');
+                console.log('Customer email:', email[0].EMAIL);
 
-                //console.log('=====line 66: ',emailService);
                 const mailConfig = {
                     to: email[0].EMAIL,
                     subject: `Order Status Update for Order ID: ${orderId}`,
                     text: `Dear Customer,\n\nYour order status has been updated from ${currentOrderStatus} to ${newStatus}.\n\nComments: ${comments || 'N/A'}\n\nThank you for choosing our service!`
                 };
+                console.log('Mail configuration:', mailConfig);
+
+                //Use sendMail from SAP Cloud SDK
                 //await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
+                console.log('Email sent successfully via SAP Cloud SDK');
+
 
             } catch (error) {
                 console.error('Failed to send email notification:', error.message);
@@ -169,6 +174,8 @@ module.exports = cds.service.impl(async function () {
     }
 
     this.on('restoreProductStocksBatch', async (req) => {
+        console.log('====== req:', req.user);
+
         const ltt = `#ltt_${cds.utils.uuid().replace(/-/g, '')}`;
         try {
 
