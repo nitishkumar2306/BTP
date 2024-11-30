@@ -1,16 +1,53 @@
 const cds = require('@sap/cds');
+const { sendMail } = require('@sap-cloud-sdk/mail-client');
 
 module.exports = cds.service.impl(async function () {
 
     // this.after('UPDATE','CatalogService_Products', async (data) => {
     //     console.log('=====Line num 26: Product Update Trigger Data:', data);
     // })
-    this.after('UPDATE','Products', async (data)=>{
+    this.after('UPDATE', 'Products', async (data) => {
         const productId = data.ProductID;
-        const product = await SELECT.from('CatalogService_Products').where({ProductID : productId});
-        console.log('=====Line num 11: ', product);
-        if(product[0].UNITSINSTOCK <= product[0].REORDERLEVEL){
-            
+        const product = await SELECT.from('CatalogService_Products').where({ ProductID: productId });
+        
+        if (product[0].UNITSINSTOCK >= product[0].REORDERLEVEL) {
+            const managers = await SELECT.from('CatalogService_Users').where({ Role: 'InventoryManager' });
+            console.log('=====line num 14', managers);
+            if (managers.length > 0) {
+                for (const manager of managers) {
+                    console.log('=====line num 18', manager.EMAIL);
+                    const mailConfig = {
+                        to: manager.Email,
+                        subject: `Low Stock Alert: ${product[0].PRODUCTNAME}`,
+                        text: `
+                    Dear ${manager.FirstName},
+                    
+                    This is an automated notification regarding low inventory levels.
+                    
+                        Product Details:
+                        - Product Name: ${product[0].PRODUCTNAME}
+                        - Current Stock: ${product[0].UNITSINSTOCK}
+                        - Reorder Level: ${product[0].REORDERLEVEL}
+                        - Product ID: ${product[0].PRODUCTID}
+                        - Unit Price: ${product[0].UNITPRICE}
+                        - Category: ${product[0].CATEGORYID}
+                    
+                    Immediate Action Required:
+                    The current stock level has fallen below the reorder threshold. Please review and initiate the reordering process.
+                    
+                    Best regards,
+                    Inventory Management System        `
+                    };
+
+                    try {
+                        await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
+                        console.log(`Stock alert email sent to manager: ${manager.EMAIL}`);
+                    } catch (error) {
+                        console.error(`Failed to send stock alert email to ${manager.Email}:`, error.message);
+
+                    }
+                }
+            }
         }
     })
 
@@ -37,11 +74,11 @@ module.exports = cds.service.impl(async function () {
                 Freight: input.freight,
                 OrderStatus: 'Pending'
             };
-           
+
             const orderDetailsEntries = [];
             for (const item of input.OrderItems) {
                 const product = await SELECT.from('CatalogService_Products').where({ ProductID: item.ProductID });
-                
+
                 if (!product.length) {
                     req.error(400, `Product with ID ${item.ProductID} not found`);
                 }
@@ -63,7 +100,7 @@ module.exports = cds.service.impl(async function () {
                 orderDetailsEntries.push(orderDetail);
 
                 console.log('Starting product update for:', item.ProductID);
-               
+
                 const srv = await cds.connect.to('CatalogService');
                 await srv.update('Products').set({
                     UnitsInStock: { '-=': item.Quantity },
@@ -137,7 +174,7 @@ module.exports = cds.service.impl(async function () {
                 }
             }
 
-            await UPDATE.entity('CatalogService_Orders').set({ OrderStatus: newStatus }).where({ OrderID: orderId });
+            // await UPDATE.entity('CatalogService_Orders').set({ OrderStatus: newStatus }).where({ OrderID: orderId });
 
             onerowdata = {
                 HistoryID: cds.utils.uuid(),
@@ -155,17 +192,17 @@ module.exports = cds.service.impl(async function () {
                 INSERT.into('CatalogService_OrderStatusHistory').entries(onerowdata)
             ]);
 
-
             try {
                 const email = await SELECT.from('CatalogService_Customers').where({ CustomerID: order[0].CUSTOMERID }).columns(['Email']);
-                console.log('Customer email:', email[0].EMAIL);
+                //console.log('Customer email:', email[0].EMAIL);
 
                 const mailConfig = {
                     to: email[0].EMAIL,
                     subject: `Order Status Update for Order ID: ${orderId}`,
                     text: `Dear Customer,\n\nYour order status has been updated from ${currentOrderStatus} to ${newStatus}.\n\nComments: ${comments || 'N/A'}\n\nThank you for choosing our service!`
                 };
-                console.log('Mail configuration:', mailConfig);
+                //Use sendMail from SAP Cloud SDK
+                //await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
 
             } catch (error) {
                 console.error('Failed to send email notification:', error.message);

@@ -10,7 +10,13 @@ type placeOrderReturnType {
 @(requires: 'authenticated-user')
 service CatalogService {
 
-    entity Users        as projection on my.users;
+    entity Users as projection on my.users{
+        UserID as userId,
+        userName,
+        Email as email,
+        Role as role,
+        Active as active
+    };
 
     @(restrict: [
         {
@@ -27,7 +33,20 @@ service CatalogService {
             to   : 'InventoryManager'
         }
     ])
-    entity Customers    as projection on my.Customers;
+    entity Customers    as projection on my.Customers{
+        CustomerID as customerId,
+        CompanyName as companyName,
+        ContactName as contactName,
+        ContactTitle as contactTitle,
+        Address as address,
+        City as city,
+        Region as region,
+        PostalCode as postalCode,
+        Country as country,
+        Phone as phone,
+        Fax as fax,
+        Email as email
+    };
 
     @(restrict: [
         {
@@ -44,7 +63,14 @@ service CatalogService {
             where: 'exists (SELECT 1 FROM Orders WHERE OrderDetails.OrderID = Orders.OrderID AND Orders.EmployeeID = $user)'
         }
     ])
-    entity OrderDetails as projection on my.OrderDetails;
+    entity OrderDetails as projection on my.OrderDetails{
+        OrderDetailsId as orderDetailsId,
+        OrderID as orderId,
+        ProductID as productId,
+        UnitPrice as unitPrice,
+        Quantity as quantity,
+        Discount as discount
+    };
 
     @(restrict: [
         {
@@ -61,10 +87,10 @@ service CatalogService {
     ])
     entity Products     as
         projection on my.Products {
-            ProductID,
-            ProductName,
-            SupplierID,
-            QuantityPerUnit,
+            ProductID as productId,
+            ProductName as productName,
+            SupplierID as supplierId,
+            QuantityPerUnit as quantityPerUnit,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -72,7 +98,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitPrice,
+            UnitPrice as unitPrice,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -80,7 +106,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitsInStock,
+            UnitsInStock as UnitsInStock,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -88,7 +114,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitsOnOrder,
+            UnitsOnOrder as unitsOnOrder,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -96,9 +122,9 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            ReorderLevel,
-            Discontinued,
-            Supplier
+            ReorderLevel as reorderLevel,
+            Discontinued as discontinued,
+            Supplier as supplier
         };
 
     @(restrict: [
@@ -117,7 +143,21 @@ service CatalogService {
             to   : 'InventoryManager'
         }
     ])
-    entity Orders       as projection on my.Orders;
+    entity Orders       as projection on my.Orders{
+        OrderID as orderId,
+        CustomerID as customerId,
+        EmployeeID as employeeId,
+        OrderDate as orderDate,
+        DeliveredDate as deliveredDate,
+        ShippedDate as shippedDate,
+        Freight as freight,
+        ShipName as shipName,
+        ShipAddress as shipAddress,
+        ShipCity as shipCity,
+        ShipRegion as shipRegion,
+        ShipPostalCode as shipPostalCode,
+        OrderStatus as orderStatus
+    };
 
     @(restrict: [
         {
@@ -132,7 +172,19 @@ service CatalogService {
             to   : 'SalesReps'
         }
     ])
-    entity Suppliers    as projection on my.Suppliers;
+    entity Suppliers    as projection on my.Suppliers{
+        SupplierID as supplierId,
+        CompanyName as companyName,
+        ContactName as contactName,
+        ContactTitle as contactTitle,
+        Address as address,
+        City as city,
+        Region as region,
+        PostalCode as postalCode,
+        Country as country,
+        Phone as phone,
+        Fax as fax
+    };
 
 
     function calculateTotalRevenue(productName : String, startDate : Date, endDate : Date)          returns Decimal(10, 2);

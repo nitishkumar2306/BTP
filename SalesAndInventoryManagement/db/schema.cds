@@ -98,9 +98,6 @@ entity Products {
 
         // Association to Suppliers
         Supplier        : Association to Suppliers on Supplier.SupplierID = $self.SupplierID;
-
-        // Association to Inventory Managers
-        ManagedBy       : Association to users on ManagedBy.Role = 'InventoryManager' and ManagedBy.Active = true;
 }
 
 entity Suppliers {
