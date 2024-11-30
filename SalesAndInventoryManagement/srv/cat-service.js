@@ -1,25 +1,105 @@
 const cds = require('@sap/cds');
-const { sendMail } = require('@sap-cloud-sdk/mail-client');
 
 module.exports = cds.service.impl(async function () {
 
-    // this.on('READ','Orders',async(req)=>{
-    //     console.log('====== req',req);
-    //     const Admin = req.user.is('Admin');
-    //     const SalesRep = req.user.is('SalesReps');
+    // this.after('UPDATE','CatalogService_Products', async (data) => {
+    //     console.log('=====Line num 26: Product Update Trigger Data:', data);
+    // })
+    this.after('UPDATE','Products', async (data)=>{
+        const productId = data.ProductID;
+        const product = await SELECT.from('CatalogService_Products').where({ProductID : productId});
+        console.log('=====Line num 11: ', product);
+        if(product[0].UNITSINSTOCK <= product[0].REORDERLEVEL){
+            
+        }
+    })
 
-    //     if(!Admin){
-    //         req.reject(403, 'The user is not authorized to access this resource');
-    //     }
+    this.on('placeOrder', async (req) => {
+        const { input } = req.data;
+        let totalCost = 0;
+        try {
+            const customer = await SELECT.from('CatalogService_Customers').where({ CustomerID: input.customerID });
+            if (!customer.length) {
+                req.error(400, `customer with ID ${input.customerID} not found`);
+            }
 
-    //     var result = await cds.run(req.query);
+            const orderId = cds.utils.uuid();
+            const orderData = {
+                OrderID: orderId,
+                CustomerID: input.customerID,
+                EmployeeID: input.employeeID,
+                OrderDate: input.orderDate || new Date(),
+                ShipName: input.shipping.ShipName,
+                ShipAddress: input.shipping.ShipAddress,
+                ShipCity: input.shipping.ShipCity,
+                ShipRegion: input.shipping.ShipRegion,
+                ShipPostalCode: input.shipping.ShipPostalCode,
+                Freight: input.freight,
+                OrderStatus: 'Pending'
+            };
+           
+            const orderDetailsEntries = [];
+            for (const item of input.OrderItems) {
+                const product = await SELECT.from('CatalogService_Products').where({ ProductID: item.ProductID });
+                
+                if (!product.length) {
+                    req.error(400, `Product with ID ${item.ProductID} not found`);
+                }
 
-    //     if(Admin){
-    //         result = result.filter(temp => temp.EmployeeID > 4);
-    //     }
+                if (product[0].UnitsInStock < item.Quantity) {
+                    req.error(400, `Insufficient stock for the product ${item.ProductID}`);
+                }
 
-    //     return result;
-    // });
+                const orderDetail = {
+                    OrderDetailsId: cds.utils.uuid(),
+                    OrderID: orderId,
+                    ProductID: item.ProductID,
+                    UnitPrice: product[0].UNITPRICE,
+                    Quantity: item.Quantity,
+                    Discount: 0
+                }
+
+                totalCost += orderDetail.UnitPrice * orderDetail.Quantity;
+                orderDetailsEntries.push(orderDetail);
+
+                console.log('Starting product update for:', item.ProductID);
+               
+                const srv = await cds.connect.to('CatalogService');
+                await srv.update('Products').set({
+                    UnitsInStock: { '-=': item.Quantity },
+                    UnitsOnOrder: { '+=': item.Quantity }
+                }).where({ ProductID: item.ProductID });
+            }
+
+            // Create Order Status History entry
+            const historyEntry = {
+                HistoryID: cds.utils.uuid(),
+                OrderID: orderId,
+                OldStatus: null,
+                NewStatus: 'Pending',
+                createdAt: new Date().toISOString(),
+                createdBy: req.user.id,
+                modifiedAt: new Date().toISOString(),
+                modifiedBy: req.user.id
+            };
+
+            //Execute all database operations in a single transaction
+            // await cds.transaction(req).run([
+            //     INSERT.into('CatalogService_Orders').entries(orderData),
+            //     INSERT.into('CatalogService_OrderDetails').entries(orderDetailsEntries),
+            //     INSERT.into('CatalogService_OrderStatusHistory').entries(historyEntry)
+            // ]);
+
+            return {
+                message: 'Order placed successfully',
+                orderID: orderId,
+                totalCost: totalCost
+            };
+        } catch (error) {
+            req.error(500, `Error creating order: ${error.message}`);
+        }
+    });
+
 
     this.on('updateOrderStatus', async (req) => {
 
@@ -87,11 +167,6 @@ module.exports = cds.service.impl(async function () {
                 };
                 console.log('Mail configuration:', mailConfig);
 
-                //Use sendMail from SAP Cloud SDK
-                //await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
-                console.log('Email sent successfully via SAP Cloud SDK');
-
-
             } catch (error) {
                 console.error('Failed to send email notification:', error.message);
             }
@@ -140,31 +215,6 @@ module.exports = cds.service.impl(async function () {
             req.error(500, `Error finding details: ${error.message}`);
         }
     })
-
-    this.on('placeOrder', async (req) => {
-        const { input } = req.data;
-        let totalCost = 0;
-        let resultMessage = '';
-
-        for (let item in input.OrderItems) {
-            const { ProductID, Quantity } = item;
-
-            const result = await cds.tx(req).run(
-                SELECT.one`UpdateInventoryAfterOrderPlacement(${ProductID}, ${Quantity}) AS resultMessage`
-            );
-
-            if (result.resultMessage !== 'Inventory Updated Successfully') {
-                return { message: result.resultMessage };
-            }
-
-            const price = await getUnitPrice(ProductID);
-            totalCost += price * Quantity;
-
-            const order = await INSERT.into('Orders').entries({
-
-            })
-        }
-    });
 
     async function getUnitPrice(productId) {
         const product = await cds.tx(req).run(
@@ -396,4 +446,5 @@ module.exports = cds.service.impl(async function () {
             req.error(500, `Error calculating total revenue: ${error.message}`);
         }
     });
+    //return service
 });

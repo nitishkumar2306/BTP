@@ -9,9 +9,17 @@ type OrderStatus : String enum{
     Returned;
 
 }
+entity users {
+    key UserID : UUID;
+    userName: String(50) @Common.FieldControl: #Mandatory;
+    Email: String(100) @Common.FieldControl: #Mandatory; 
+    Role: String(20) enum { SalesRep; InventoryManager; Admin; };
+    Active : Boolean default true;
 
+    Orders: Association to many Orders on Orders.EmployeeID = $self.UserID;
+}
 entity Customers {
-    key CustomerID         : UUID;
+    key CustomerID   : UUID;
         CompanyName : String(40);
         ContactName  : String(30);
         ContactTitle : String(30);
@@ -32,7 +40,7 @@ entity Customers {
 entity Orders {
     key OrderID        : UUID;
         CustomerID     : UUID; // Foreign Key to Customers
-        EmployeeID     : Integer; // Foreign Key to Employees (not created here but can be added if needed)
+        EmployeeID     : UUID; // Foreign Key to Employees (not created here but can be added if needed)
         OrderDate      : Date;
         DeliveredDate  : Date;
         ShippedDate    : Date;
@@ -42,14 +50,16 @@ entity Orders {
         ShipCity       : String(15);
         ShipRegion     : String(15);
         ShipPostalCode : String(10);
-        OrderStatus  : OrderStatus;
+        OrderStatus  : OrderStatus @default: 'Pending';
 
         // Association to OrderDetails
-        OrderDetails   : Composition of many OrderDetails
-                             on OrderDetails.OrderID = $self.OrderID;
+        OrderDetails   : Composition of many OrderDetails on OrderDetails.OrderID = $self.OrderID;
 
         // Association to history
-        histories : Composition of many OrderStatusHistory on histories.OrderID = $self.OrderID;
+        histories       : Composition of many OrderStatusHistory on histories.OrderID = $self.OrderID;
+
+        // Association to SalesReps
+        SalesRep        : Association to users on SalesRep.UserID = $self.EmployeeID and SalesRep.Role = 'SalesRep';
 }
 
 entity OrderStatusHistory : managed{
@@ -88,6 +98,9 @@ entity Products {
 
         // Association to Suppliers
         Supplier        : Association to Suppliers on Supplier.SupplierID = $self.SupplierID;
+
+        // Association to Inventory Managers
+        ManagedBy       : Association to users on ManagedBy.Role = 'InventoryManager' and ManagedBy.Active = true;
 }
 
 entity Suppliers {

@@ -44,3 +44,36 @@ X-Requested-With: XMLHttpRequest
   "newStatus": "Returned",
   "comments": "Hello"
 }
+
+### test placeOrder action
+POST http://localhost:4004/odata/v4/catalog/placeOrder
+Content-Type: application/json
+Authorization: Basic Quint:quint
+X-Requested-With: XMLHttpRequest
+
+{
+    "input": {
+        "customerID": "23987cc9-98ff-4226-b3da-b3142dbeb90b",
+        "OrderItems": [
+            {
+                "ProductID": "0e53cfe6-0a23-456c-888f-5f624573f92c",
+                "Quantity": 1
+            },
+            {
+                "ProductID": "39e7e739-764e-46e8-8bcd-89de4f1a7e7e",
+                "Quantity": 1
+            }
+        ],
+        "shipping": {
+            "ShipName": "John Doe",
+            "ShipAddress": "123 Main Street",
+            "ShipCity": "New York",
+            "ShipRegion": "NY",
+            "ShipPostalCode": "10001",
+            "ShipCountry": "USA"
+        },
+        "employeeID": 1,
+        "orderDate": "2024-01-20",
+        "freight": 25.50
+    }
+}
