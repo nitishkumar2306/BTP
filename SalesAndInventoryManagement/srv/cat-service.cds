@@ -10,13 +10,14 @@ type placeOrderReturnType {
 @(requires: 'authenticated-user')
 service CatalogService {
 
-    entity Users as projection on my.users{
-        UserID as userId,
-        userName,
-        Email as email,
-        Role as role,
-        Active as active
-    };
+    entity Users              as
+        projection on my.users {
+            UserID as userId,
+            userName,
+            Email  as email,
+            Role   as role,
+            Active as active
+        };
 
     @(restrict: [
         {
@@ -33,20 +34,37 @@ service CatalogService {
             to   : 'InventoryManager'
         }
     ])
-    entity Customers    as projection on my.Customers{
-        CustomerID as customerId,
-        CompanyName as companyName,
-        ContactName as contactName,
-        ContactTitle as contactTitle,
-        Address as address,
-        City as city,
-        Region as region,
-        PostalCode as postalCode,
-        Country as country,
-        Phone as phone,
-        Fax as fax,
-        Email as email
-    };
+    entity Customers          as
+        projection on my.Customers {
+            CustomerID   as customerId,
+            CompanyName  as companyName,
+            ContactName  as contactName,
+            ContactTitle as contactTitle,
+            Address      as address,
+            City         as city,
+            Region       as region,
+            PostalCode   as postalCode,
+            Country      as country,
+            Phone        as phone,
+            Fax          as fax,
+            Email        as email
+        };
+
+    @(restrict: [{
+        grant: '*',
+        to   : 'Admin'
+    }])
+    entity OrderStatusHistory as
+        projection on my.OrderStatusHistory {
+            HistoryID  as historyId,
+            OrderID    as orderId,
+            OldStatus  as oldStatus,
+            NewStatus  as newStatus,
+            createdAt  as createdAt,
+            createdBy  as createdBy,
+            modifiedAt as modifiedAt,
+            modifiedBy as modifiedBy
+        };
 
     @(restrict: [
         {
@@ -63,14 +81,15 @@ service CatalogService {
             where: 'exists (SELECT 1 FROM Orders WHERE OrderDetails.OrderID = Orders.OrderID AND Orders.EmployeeID = $user)'
         }
     ])
-    entity OrderDetails as projection on my.OrderDetails{
-        OrderDetailsId as orderDetailsId,
-        OrderID as orderId,
-        ProductID as productId,
-        UnitPrice as unitPrice,
-        Quantity as quantity,
-        Discount as discount
-    };
+    entity OrderDetails       as
+        projection on my.OrderDetails {
+            OrderDetailsId as orderDetailsId,
+            OrderID        as orderId,
+            ProductID      as productId,
+            UnitPrice      as unitPrice,
+            Quantity       as quantity,
+            Discount       as discount
+        };
 
     @(restrict: [
         {
@@ -85,11 +104,11 @@ service CatalogService {
             to   : 'SalesReps'
         }
     ])
-    entity Products     as
+    entity Products           as
         projection on my.Products {
-            ProductID as productId,
-            ProductName as productName,
-            SupplierID as supplierId,
+            ProductID       as productId,
+            ProductName     as productName,
+            SupplierID      as supplierId,
             QuantityPerUnit as quantityPerUnit,
             @(restrict: [{
                 grant: '*',
@@ -98,7 +117,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitPrice as unitPrice,
+            UnitPrice       as unitPrice,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -106,7 +125,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitsInStock as UnitsInStock,
+            UnitsInStock    as unitsInStock,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -114,7 +133,7 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            UnitsOnOrder as unitsOnOrder,
+            UnitsOnOrder    as unitsOnOrder,
             @(restrict: [{
                 grant: '*',
                 to   : [
@@ -122,9 +141,9 @@ service CatalogService {
                     'Admin'
                 ]
             }])
-            ReorderLevel as reorderLevel,
-            Discontinued as discontinued,
-            Supplier as supplier
+            ReorderLevel    as reorderLevel,
+            Discontinued    as discontinued,
+            Supplier        as supplier
         };
 
     @(restrict: [
@@ -143,21 +162,22 @@ service CatalogService {
             to   : 'InventoryManager'
         }
     ])
-    entity Orders       as projection on my.Orders{
-        OrderID as orderId,
-        CustomerID as customerId,
-        EmployeeID as employeeId,
-        OrderDate as orderDate,
-        DeliveredDate as deliveredDate,
-        ShippedDate as shippedDate,
-        Freight as freight,
-        ShipName as shipName,
-        ShipAddress as shipAddress,
-        ShipCity as shipCity,
-        ShipRegion as shipRegion,
-        ShipPostalCode as shipPostalCode,
-        OrderStatus as orderStatus
-    };
+    entity Orders             as
+        projection on my.Orders {
+            OrderID        as orderId,
+            CustomerID     as customerId,
+            EmployeeID     as employeeId,
+            OrderDate      as orderDate,
+            DeliveredDate  as deliveredDate,
+            ShippedDate    as shippedDate,
+            Freight        as freight,
+            ShipName       as shipName,
+            ShipAddress    as shipAddress,
+            ShipCity       as shipCity,
+            ShipRegion     as shipRegion,
+            ShipPostalCode as shipPostalCode,
+            OrderStatus    as orderStatus
+        };
 
     @(restrict: [
         {
@@ -172,19 +192,20 @@ service CatalogService {
             to   : 'SalesReps'
         }
     ])
-    entity Suppliers    as projection on my.Suppliers{
-        SupplierID as supplierId,
-        CompanyName as companyName,
-        ContactName as contactName,
-        ContactTitle as contactTitle,
-        Address as address,
-        City as city,
-        Region as region,
-        PostalCode as postalCode,
-        Country as country,
-        Phone as phone,
-        Fax as fax
-    };
+    entity Suppliers          as
+        projection on my.Suppliers {
+            SupplierID   as supplierId,
+            CompanyName  as companyName,
+            ContactName  as contactName,
+            ContactTitle as contactTitle,
+            Address      as address,
+            City         as city,
+            Region       as region,
+            PostalCode   as postalCode,
+            Country      as country,
+            Phone        as phone,
+            Fax          as fax
+        };
 
 
     function calculateTotalRevenue(productName : String, startDate : Date, endDate : Date)          returns Decimal(10, 2);
@@ -193,6 +214,7 @@ service CatalogService {
     function calculateCustomerLifetimeValue(contactName : String, startDate : Date, endDate : Date) returns Decimal(10, 2);
     action   updateInventoryAfterOrderPlacement(productname : String, quantity : Integer)           returns String;
     action   orderCancellationRequest(orderId : String)                                             returns String;
+
     @(restrict: [
         {
             grant: '*',
@@ -211,20 +233,20 @@ service CatalogService {
     };
 
     type OrderInput {
-        customerID         : UUID; // Change from String(10) to UUID
-        OrderItems         : many {
-            ProductID      : UUID; // Change from Integer to UUID
-            Quantity       : Integer;
+        customerId         : UUID; // Change from String(10) to UUID
+        orderItems         : many {
+            productId      : UUID; // Change from Integer to UUID
+            quantity       : Integer;
         };
         shipping           : {
-            ShipName       : String(40);
-            ShipAddress    : String(60);
-            ShipCity       : String(15);
-            ShipRegion     : String(15);
-            ShipPostalCode : String(10);
-            ShipCountry    : String(15);
+            shipName       : String(40);
+            shipAddress    : String(60);
+            shipCity       : String(15);
+            shipRegion     : String(15);
+            shipPostalCode : String(10);
+            shipCountry    : String(15);
         };
-        employeeID         : Integer;
+        employeeId         : Integer;
         orderDate          : Date;
         freight            : Decimal(10, 2);
     };
@@ -251,7 +273,7 @@ service CatalogService {
             to   : 'SalesReps'
         }
     ])
-    action   updateOrderStatus(orderId : String, newStatus : String, comments : String)             returns {
+    action updateOrderStatus(orderId : String, newStatus : String, comments : String)             returns {
         message : String;
         success : Boolean;
     }

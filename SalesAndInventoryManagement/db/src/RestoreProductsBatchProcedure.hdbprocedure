@@ -13,9 +13,9 @@ BEGIN
 
     MERGE INTO CatalogService_Products AS p
     USING :ProductUpdates AS pu 
-    ON p.productName = pu.productName
+    ON p.productName = pu.ProductName
     WHEN MATCHED THEN
-        UPDATE SET p.UnitsInStock = p.UnitsInStock + pu.QuantityToAdd;
+        UPDATE SET p.unitsInStock = p.unitsInStock + pu.QuantityToAdd;
     
         effectedRows = ::ROWCOUNT; 
 

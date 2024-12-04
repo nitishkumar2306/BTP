@@ -29,13 +29,16 @@ modules:
       - name: SalesAndInventoryManagement-hdi-container
       - name: SalesAndInventoryManagement-connectivity
       - name: SalesAndInventoryManagement-destination
+      - name: SalesAndInventoryManagement-cloud-logging
 
   - name: SalesAndInventoryManagement-db-deployer
     type: hdb
     path: gen/db
     requires:
       - name: SalesAndInventoryManagement-hdi-container
-      
+    parameters:
+      buildpack: nodejs_buildpack
+
   - name: SalesAndInventoryManagement
     type: approuter.nodejs
     path: app/router
@@ -77,4 +80,9 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: destination
+      service-plan: lite
+  - name: SalesAndInventoryManagement-cloud-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
       service-plan: lite
