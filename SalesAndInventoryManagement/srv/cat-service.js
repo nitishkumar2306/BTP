@@ -47,7 +47,7 @@ module.exports = cds.service.impl(async function () {
       
         const productId = data.productId;
         const product = await SELECT.from('CatalogService_Products').where({ productId: productId });
-        //console.log('=====line num 49', product);
+        console.log('=====line num 49', product);
 
         if (product[0].UNITSINSTOCK >= product[0].REORDERLEVEL) {
             const managers = await SELECT.from('CatalogService_Users').where({ Role: 'InventoryManager' });
@@ -80,15 +80,11 @@ module.exports = cds.service.impl(async function () {
                     };
 
                     try {
-                        //await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
-                        await sendMail({ 
-                            destinationName: 'emailService',
-                            forwardAuthToken: true 
-                        }, [mailConfig]);
+                        await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
                         
                         console.log(`======Stock alert email sent to manager: ${manager.EMAIL}======`);
                     } catch (error) {
-                        console.error(`=======Failed to send stock alert email to ${manager.Email}:======`, error.message);
+                        console.error(`=======Failed to send stock alert email to ${manager.EMAIL}:======`, error.message);
 
                     }
                 }

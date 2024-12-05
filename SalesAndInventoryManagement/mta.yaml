@@ -30,6 +30,10 @@ modules:
       - name: SalesAndInventoryManagement-connectivity
       - name: SalesAndInventoryManagement-destination
       - name: SalesAndInventoryManagement-cloud-logging
+        parameters:
+          enable-telemetry: true
+          enable-logging: true
+      - name: SalesAndInventoryManagement-db-deployer
 
   - name: SalesAndInventoryManagement-db-deployer
     type: hdb
@@ -86,3 +90,7 @@ resources:
     parameters:
       service: application-logs
       service-plan: lite
+      config:
+        enable-telemetry: true
+        format: json
+        tenant-mode: dedicated

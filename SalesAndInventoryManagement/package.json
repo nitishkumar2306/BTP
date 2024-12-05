@@ -7,7 +7,6 @@
   "private": true,
   "dependencies": {
     "@cap-js/hana": "^1",
-    "@cap-js/telemetry": "^1.1.1",
     "@grpc/grpc-js": "^1.12.2",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/exporter-metrics-otlp-grpc": "^0.55.0",
@@ -29,7 +28,9 @@
     "@sap/xssec": "^4",
     "approuter": "file:app/router",
     "cookie": "^1.0.2",
+    "cookie-parser": "^1.4.7",
     "express": "^4",
+    "express-session": "^1.18.1",
     "passport": "^0.7.0"
   },
   "devDependencies": {
