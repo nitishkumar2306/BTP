@@ -4,6 +4,12 @@ Content-Type: application/json
 Authorization: Basic Quint:quint
 X-Requested-With: XMLHttpRequest
 
+### Request to test orders api endpoint
+GET http://localhost:4004/odata/v4/catalog/Orders
+Content-Type: application/json
+Authorization: Basic Quint:quint
+X-Requested-With: XMLHttpRequest
+
 ### Request to test Customers api endpoint
 GET http://localhost:4004/odata/v4/catalog/Customers
 Content-Type: application/json

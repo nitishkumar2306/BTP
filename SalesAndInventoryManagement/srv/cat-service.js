@@ -16,32 +16,34 @@ module.exports = cds.service.impl(async function () {
         );
     });
 
-    // this.before('CREATE', 'Products', async (req) => {
-    //     const user = req.user.id;
-    //     const action = req.event;
-    //     const product = req.data;
+    // Users - requires authenticated user only
+    this.before(['READ', 'CREATE', 'UPDATE', 'DELETE'], 'Users', async (req) => {
+        if (!req.user.is('authenticated-user')) {
+            return req.reject(403, 'Authentication required')
+        }
+    })
 
-    //     //custom log
-    //     LOG.info(
-    //         `=======User ${user} is performing ${action} on Product ID: ${product.productId}========`
-    //     );
-    // });
+    this.before(['READ', 'CREATE', 'UPDATE', 'DELETE'], 'Customers', async (req) => {
+        if (req.user.is('Admin')) return // Admin has full access
+        
+        if (req.user.is('SalesReps')) {
+            // Add filter for SalesRep's customers only
+            const SELECT = cds.parse.cql(`SELECT 1 FROM Orders WHERE Orders.CustomerID = Customers.CustomerID AND Orders.EmployeeID = '${req.user.id}'`)
+            req.query.where(SELECT)
+            return
+        }
+        
+        if (req.user.is('InventoryManager')) {
+            if (req.event !== 'READ') {
+                return req.reject(403, 'InventoryManager has read-only access to Customers')
+            }
+            return
+        }
+        
+        return req.reject(403, 'Insufficient permissions')
+    })
 
-    // this.before('*', async (req) => {
-    //     const logger = cds.log('Security');
-    //     const user = req.user.id;
-    //     const event = req.event;
-    
-    //     // Example: Prevent non-Admins from deleting orders
-    //     if (event === 'DELETE' && req.entity === 'Orders' && req.user.role !== 'Admin') {
-    //         logger.warn(`Access violation: User ${user} tried to delete an order.`);
-    //         req.reject(403, 'Unauthorized operation');
-    //     }
-    // });
-
-    // this.after('UPDATE','CatalogService_Products', async (data) => {
-    //     console.log('=====Line num 26: Product Update Trigger Data:', data);
-    // })
+   
 
     this.after('UPDATE', 'Products', async (data) => {
       
@@ -61,20 +63,9 @@ module.exports = cds.service.impl(async function () {
                         subject: `Low Stock Alert: ${product[0].PRODUCTNAME}`,
                         text: `
                     Dear ${manager.userId},
-                    
                     This is an automated notification regarding low inventory levels.
-                    
                         Product Details:
                         - Product Name: ${product[0].PRODUCTNAME}
-                        - Current Stock: ${product[0].UNITSINSTOCK}
-                        - Reorder Level: ${product[0].REORDERLEVEL}
-                        - Product ID: ${product[0].PRODUCTID}
-                        - Unit Price: ${product[0].UNITPRICE}
-                        - Category: ${product[0].CATEGORYID}
-                    
-                    Immediate Action Required:
-                    The current stock level has fallen below the reorder threshold. Please review and initiate the reordering process.
-                    
                     Best regards,
                     Inventory Management System        `
                     };
