@@ -4,6 +4,23 @@ const { sendMail } = require('@sap-cloud-sdk/mail-client');
 
 
 module.exports = cds.service.impl(async function () {
+
+    this.on('callNorthwindDestination', async (req) => {
+        try {
+            // Connect to the northwindAPI service defined in package.json
+            const northwindAPI = await cds.connect.to('northwindAPI');
+            
+            const response = await northwindAPI.get('/Products');
+            
+            console.log('===========Result:', response);
+            LOG.info('Successfully retrieved data from Northwind service');
+            return response;
+
+        } catch (error) {
+            LOG.error(`Failed to call Northwind service: ${error.message}`);
+            throw new Error(`Destination service error: ${error.message}`);
+        }
+    });
     
     this.before(['CREATE', 'UPDATE'], 'Orders', async (req) => {
         const user = req.user.id;

@@ -95,13 +95,14 @@
         }
       },
       "connectivity": true,
-      "destinations": true,
       "northwindAPI": {
         "kind": "rest",
         "credentials": {
-          "destination": "Northwind"
+          "destination": "Northwind",
+          "path": "/V3/Northwind/Northwind.svc"
         }
       },
+      "destinations": true,
       "emailService": {
         "kind": "rest",
         "credentials": {

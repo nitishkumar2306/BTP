@@ -276,5 +276,9 @@ service CatalogService {
     action updateOrderStatus(orderId : String, newStatus : String, comments : String)             returns {
         message : String;
         success : Boolean;
+    };
+
+    function callNorthwindDestination() returns{
+        success: Boolean
     }
 }
