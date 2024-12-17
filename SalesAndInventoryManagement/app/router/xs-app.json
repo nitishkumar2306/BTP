@@ -6,6 +6,13 @@
   },
   "routes": [
     {
+      "source": "^/comsapsalesinventorymanagementapp/(.*)$",
+      "target": "$1",
+      "localDir": "app/salesinventorymanagementapp/dist",
+      "service": "SalesAndInventoryManagement-html5-srv",
+      "authenticationType": "xsuaa"
+    },
+    {
       "source": "^/(.*)$",
       "target": "$1",
       "authenticationType": "xsuaa",
@@ -28,5 +35,6 @@
       "localDir": ".",
       "cacheControl": "no-cache, no-store, must-revalidate"
     }
-  ]
+  ],
+  "welcomeFile": "/comsapsalesinventorymanagementapp/index.html"
 }

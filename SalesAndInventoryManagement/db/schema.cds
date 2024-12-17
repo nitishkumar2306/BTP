@@ -19,9 +19,9 @@ entity users {
     Orders: Association to many Orders on Orders.EmployeeID = $self.UserID;
 }
 entity Customers {
-    key CustomerID   : UUID;
+    key CustomerID   : UUID @Catalog.index;
         CompanyName : String(40);
-        ContactName  : String(30);
+        ContactName  : String(30) @cds.persistence.index;
         ContactTitle : String(30);
         Address      : String(60);
         City         : String(15);
@@ -39,15 +39,15 @@ entity Customers {
 
 entity Orders {
     key OrderID        : UUID;
-        CustomerID     : UUID; // Foreign Key to Customers
-        EmployeeID     : UUID; // Foreign Key to Employees (not created here but can be added if needed)
+        CustomerID     : UUID @cds.persistence.index;
+        EmployeeID     : UUID @cds.persistence.index;
         OrderDate      : Date;
         DeliveredDate  : Date;
         ShippedDate    : Date;
         Freight        : Decimal(10, 2);
-        ShipName       : String(40);
-        ShipAddress    : String(60);
-        ShipCity       : String(15);
+        ShipName       : String(45);
+        ShipAddress    : String(65);
+        ShipCity       : String(20);
         ShipRegion     : String(15);
         ShipPostalCode : String(10);
         OrderStatus  : OrderStatus @default: 'Pending';
@@ -77,9 +77,9 @@ entity OrderDetails {
     key OrderDetailsId : UUID;
         OrderID : UUID;
         ProductID : UUID;
-        UnitPrice : Decimal(10, 2);
+        UnitPrice : Decimal(12, 2);
         Quantity  : Integer;
-        Discount  : Decimal(3, 2);
+        Discount  : Decimal(4, 2);
 
         Order   : Association to Orders on Order.OrderID = $self.OrderID;
         Product : Association to Products on Product.ProductID = $self.ProductID;

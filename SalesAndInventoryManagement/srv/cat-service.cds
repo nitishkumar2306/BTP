@@ -34,6 +34,7 @@ service CatalogService {
             to   : 'InventoryManager'
         }
     ])
+    @cds.query.limit: { default: 10, max: 100 }
     entity Customers          as
         projection on my.Customers {
             CustomerID   as customerId,

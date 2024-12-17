@@ -21,17 +21,6 @@ module.exports = cds.service.impl(async function () {
             throw new Error(`Destination service error: ${error.message}`);
         }
     });
-    
-    this.before(['CREATE', 'UPDATE'], 'Orders', async (req) => {
-        const user = req.user.id;
-        const action = req.event;
-        const order = req.data;
-
-        //custom log
-        LOG.info(
-            `=======User ${user} is performing ${action} on Order ID: ${order.orderId}========`
-        );
-    });
 
     // Users - requires authenticated user only
     this.before(['READ', 'CREATE', 'UPDATE', 'DELETE'], 'Users', async (req) => {

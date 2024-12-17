@@ -1,29 +1,11 @@
 _schema-version: 3.3.0
 ID: SalesAndInventoryManagement
+description: A simple CAP project.
 version: 1.0.0
-description: "A simple CAP project."
-parameters:
-  enable-parallel-deployments: true
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
 modules:
   - name: SalesAndInventoryManagement-srv
     type: nodejs
     path: gen/srv
-    parameters:
-      buildpack: nodejs_buildpack
-      readiness-health-check-type: http
-      readiness-health-check-http-endpoint: /health
-    build-parameters:
-      builder: npm
-    provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
-        properties:
-          srv-url: ${default-url}
     requires:
       - name: SalesAndInventoryManagement-auth
       - name: SalesAndInventoryManagement-hdi-container
@@ -31,10 +13,19 @@ modules:
       - name: SalesAndInventoryManagement-destination
       - name: SalesAndInventoryManagement-cloud-logging
         parameters:
-          enable-telemetry: true
           enable-logging: true
+          enable-telemetry: true
       - name: SalesAndInventoryManagement-db-deployer
-
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-http-endpoint: /health
+      readiness-health-check-type: http
+    build-parameters:
+      builder: npm
   - name: SalesAndInventoryManagement-db-deployer
     type: hdb
     path: gen/db
@@ -42,34 +33,67 @@ modules:
       - name: SalesAndInventoryManagement-hdi-container
     parameters:
       buildpack: nodejs_buildpack
-
   - name: SalesAndInventoryManagement
     type: approuter.nodejs
     path: app/router
-    parameters:
-      keep-existing-routes: true
-      disk-quota: 256M
-      memory: 256M
     requires:
       - name: srv-api
         group: destinations
         properties:
-          name: srv-api # must be used in xs-app.json as well
-          url: ~{srv-url}
           forwardAuthToken: true
+          name: srv-api
+          url: ~{srv-url}
+      - name: SalesAndInventoryManagement-repo-host
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: html5-apps-repo-dt
+          url: "https://html5-apps-repo-dt.cfapps.us10.hana.ondemand.com"
       - name: SalesAndInventoryManagement-auth
       - name: SalesAndInventoryManagement-destination
-
+      - name: SalesAndInventoryManagement-cloud-logging
+    parameters:
+      disk-quota: 256M
+      keep-existing-routes: true
+      memory: 256M
+  - name: SalesAndInventoryManagement-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: SalesAndInventoryManagement-repo-host
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: html5-apps-repo-dt
+          url: "https://html5-apps-repo-dt.cfapps.us10.hana.ondemand.com"
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - comsapsalesinventorymanagementapp.zip
+          name: comsapsalesinventorymanagementapp
+          target-path: resources/
+  - name: comsapsalesinventorymanagementapp
+    type: html5
+    path: app/salesinventorymanagementapp
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
 resources:
   - name: SalesAndInventoryManagement-auth
     type: org.cloudfoundry.managed-service
     parameters:
+      config:
+        tenant-mode: dedicated
+        xsappname: SalesAndInventoryManagement-auth
+      path: ./xs-security.json
       service: xsuaa
       service-plan: application
-      path: ./xs-security.json
-      config:
-        xsappname: SalesAndInventoryManagement-auth
-        tenant-mode: dedicated
   - name: SalesAndInventoryManagement-hdi-container
     type: com.sap.xs.hdi-container
     parameters:
@@ -83,14 +107,40 @@ resources:
   - name: SalesAndInventoryManagement-destination
     type: org.cloudfoundry.managed-service
     parameters:
+      config:
+        HTML5Runtime_enabled: false
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
       service: destination
       service-plan: lite
   - name: SalesAndInventoryManagement-cloud-logging
     type: org.cloudfoundry.managed-service
     parameters:
-      service: application-logs
-      service-plan: lite
       config:
         enable-telemetry: true
         format: json
         tenant-mode: dedicated
+      service: application-logs
+      service-plan: lite
+  - name: SalesAndInventoryManagement-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: SalesAndInventoryManagement-html5-srv
+      service-plan: app-host
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

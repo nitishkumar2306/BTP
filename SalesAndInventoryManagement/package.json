@@ -21,7 +21,6 @@
     "@sap/approuter": "^17.1.0",
     "@sap/cds": "^8.4.0",
     "@sap/cds-common-content": "^2.1.0",
-    "@sap/hana-client": "^2.22.32",
     "@sap/hdi-deploy": "^5.3.2",
     "@sap/logging": "^8.3.0",
     "@sap/xsenv": "^4.2.0",
@@ -35,13 +34,18 @@
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.6",
-    "@sap/cds-dk": "^8.4.1"
+    "@sap/cds-dk": "^8.4.1",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
     "start": "cds-serve",
     "start:dev": "cds run --profile development",
     "generate:default-env": "cf curl \"/v2/apps/$(cf app --guid SalesAndInventoryManagement-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json",
-    "deplo yy:cf": "npx mbt build --mtar deploy.mtar && cf deploy ./mta_archives/deploy.mtar"
+    "deplo yy:cf": "npx mbt build --mtar deploy.mtar && cf deploy ./mta_archives/deploy.mtar",
+    "watch-salesinventorymanagementapp": "cds watch --open salesinventorymanagementapp/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy SalesAndInventoryManagement --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "cds": {
     "requires": {
@@ -115,6 +119,9 @@
           "kind": "to-cloud-logging"
         }
       }
+    },
+    "sql": {
+      "native_hana_associations": false
     }
   }
 }

@@ -1,4 +1,0 @@
-TYPE "RestockRequest" AS TABLE ( 
-    productId INTEGER,
-    restockQuantity INTEGER
-)
