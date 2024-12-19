@@ -18,8 +18,8 @@ modules:
     type: approuter.nodejs
     path: app/salesinventorymanagementapp
     parameters:
-      disk-quota: 256M
-      memory: 256M
+      disk-quota: 512M
+      memory: 512M
     requires:
       - name: srv-api
         group: destinations
@@ -35,8 +35,8 @@ modules:
     type: nodejs
     path: gen/srv
     parameters:
-      disk-quota: 512M
-      memory: 256M
+      disk-quota: 1024M
+      memory: 1024M
       buildpack: nodejs_buildpack
     requires:
       - name: SalesAndInventoryManagement-auth
@@ -47,7 +47,6 @@ modules:
         parameters:
           enable-logging: true
           enable-telemetry: true
-      - name: SalesAndInventoryManagement-db-deployer
     provides:
       - name: srv-api
         properties:
