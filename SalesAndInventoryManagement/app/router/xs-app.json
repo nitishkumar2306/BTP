@@ -1,23 +1,16 @@
 {
   "authenticationMethod": "route",
+ "welcomeFile": "/salesinventorymanagementapp/webapp/index.html",
   "logout": {
     "logoutEndpoint": "/app-logout",
     "logoutPage": "/"
   },
   "routes": [
     {
-      "source": "^/comsapsalesinventorymanagementapp/(.*)$",
-      "target": "$1",
-      "localDir": "app/salesinventorymanagementapp/dist",
-      "service": "SalesAndInventoryManagement-html5-srv",
-      "authenticationType": "xsuaa"
-    },
-    {
-      "source": "^/(.*)$",
-      "target": "$1",
+      "source": "^/srv/(.*)$",
+      "target": "/odata/$1",
       "authenticationType": "xsuaa",
-      "destination": "srv-api",
-      "csrfProtection": true
+      "destination": "srv-api"
     },
     {
       "source": "^/user-api(.*)",
@@ -34,7 +27,11 @@
       "source": "^/appconfig/",
       "localDir": ".",
       "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^(.*)",
+      "target": "/SalesAndInventoryManagement/$1",
+      "service": "SalesAndInventoryManagement-repo-runtime"
     }
-  ],
-  "welcomeFile": "/comsapsalesinventorymanagementapp/index.html"
+  ]
 }
