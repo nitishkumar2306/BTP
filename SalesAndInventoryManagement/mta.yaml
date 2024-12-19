@@ -16,7 +16,7 @@ build-parameters:
 modules:
   - name: SalesAndInventoryManagement
     type: approuter.nodejs
-    path: app/router
+    path: app/salesinventorymanagementapp
     parameters:
       disk-quota: 256M
       memory: 256M
@@ -27,9 +27,7 @@ modules:
           forwardAuthToken: true
           strictSSL: false
           url: ~{srv-url}
-      - name: SalesAndInventoryManagement-repo-runtime
       - name: SalesAndInventoryManagement-auth
-      - name: SalesAndInventoryManagement-destination
       - name: SalesAndInventoryManagement-cloud-logging
       - name: html5_destination
 
@@ -44,7 +42,7 @@ modules:
       - name: SalesAndInventoryManagement-auth
       - name: SalesAndInventoryManagement-hdi-container
       - name: SalesAndInventoryManagement-connectivity
-      - name: SalesAndInventoryManagement-destination
+      - name: html5_destination
       - name: SalesAndInventoryManagement-cloud-logging
         parameters:
           enable-logging: true
@@ -62,20 +60,6 @@ modules:
     requires:
       - name: SalesAndInventoryManagement-hdi-container
       - name: SalesAndInventoryManagement-auth
-  - name: SalesAndInventoryManagement-app-content
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: SalesAndInventoryManagement-repo-host
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - artifacts:
-            - comsapsalesinventorymanagementapp.zip
-          name: comsapsalesinventorymanagementapp
-          target-path: resources/
   - name: comsapsalesinventorymanagementapp
     type: html5
     path: app/salesinventorymanagementapp
@@ -107,41 +91,6 @@ resources:
     parameters:
       service: connectivity
       service-plan: lite
-  - name: SalesAndInventoryManagement-destination
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
-                URL: https://ui5.sap.com
-              - Name: SalesAndInventoryManagement-repo-host
-                ServiceInstanceName: SalesAndInventoryManagement-repo-host
-                ServiceKeyName: SalesAndInventoryManagement-repo-host-key
-                sap.cloud.service: SalesAndInventoryManagement.service
-              - Name: SalesAndInventoryManagement-auth
-                Authentication: OAuth2UserTokenExchange
-                ServiceInstanceName: SalesAndInventoryManagement-auth
-                ServiceKeyName: SalesAndInventoryManagement-auth-key
-                sap.cloud.service: SalesAndInventoryManagement.service
-              - Name: SalesAndInventoryManagement-srv
-                Description: SalesAndInventoryManagement CAP srv endpoint
-                Authentication: NoAuthentication
-                ProxyType: Internet
-                Type: HTTP
-                URL: ~{srv-api/srv-url}
-                HTML5.DynamicDestination: true
-                HTML5.ForwardAuthToken: true
-            existing_destinations_policy: update
-      service: destination
-      service-plan: lite
-    requires:
-      - name: srv-api
   - name: SalesAndInventoryManagement-cloud-logging
     type: org.cloudfoundry.managed-service
     parameters:
@@ -156,11 +105,6 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-host
-  - name: SalesAndInventoryManagement-repo-runtime
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
   - name: html5_destination
     type: org.cloudfoundry.managed-service
     parameters:
