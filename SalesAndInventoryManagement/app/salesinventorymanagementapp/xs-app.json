@@ -1,6 +1,6 @@
 {
   "authenticationMethod": "route",
- "welcomeFile": "/salesinventorymanagementapp/webapp/index.html",
+ "welcomeFile": "/index.html",
   "logout": {
     "logoutEndpoint": "/app-logout",
     "logoutPage": "/"
