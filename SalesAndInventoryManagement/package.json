@@ -7,13 +7,6 @@
   "private": true,
   "dependencies": {
     "@cap-js/hana": "^1",
-    "@grpc/grpc-js": "^1.12.2",
-    "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.55.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.55.0",
-    "@opentelemetry/host-metrics": "^0",
-    "@opentelemetry/instrumentation-http": "^0.55.0",
-    "@opentelemetry/sdk-trace-base": "^1.28.0",
     "@sap-cloud-sdk/http-client": "^3.22.2",
     "@sap-cloud-sdk/mail-client": "^3.24.0",
     "@sap-cloud-sdk/resilience": "^3.22.2",

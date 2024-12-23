@@ -10,7 +10,7 @@
       "source": "^/srv/(.*)$",
       "target": "/odata/$1",
       "authenticationType": "xsuaa",
-      "destination": "srv-api"
+      "destination": "SalesAndInventoryManagement-srv"
     },
     {
       "source": "^/user-api(.*)",

@@ -106,6 +106,22 @@ resources:
       service-plan: app-host
   - name: html5_destination
     type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
-      service-plan: lite
       service: destination
+      service-plan: lite
+      config:
+        version: 1.0.0
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            existing_destinations_policy: update
+            destinations:
+              - Name: SalesAndInventoryManagement-srv
+                URL: ~{srv-api/srv-url}
+                Authentication: NoAuthentication
+                Type: HTTP
+                ProxyType: Internet
+                HTML5.ForwardAuthToken: true
+                HTML5.DynamicDestination: true
