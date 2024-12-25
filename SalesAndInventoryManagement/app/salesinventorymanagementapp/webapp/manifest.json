@@ -17,12 +17,16 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/srv/",
+        "uri": "/odata/v4/catalog/",
         "type": "OData",
         "settings": {
           "annotations": [],
           "odataVersion": "4.0"
         }
+      },
+      "testSource":{
+        "uri": "model/object.json",
+        "type": "JSON"
       }
     },
     "crossNavigation": {
@@ -75,14 +79,19 @@
           "bundleName": "com.sap.salesinventorymanagementapp.i18n.i18n"
         }
       },
-      "": {
-        "dataSource": "mainService",
+      "capModel": {
+      "dataSource": "mainService",
+      "preload": true,
+      "settings": {
+        "operationMode": "Server",
+        "synchronizationMode": "None",
+        "autoExpandSelect": true
+      }
+    },
+      "testModel": {
+        "dataSource": "testSource",
         "preload": true,
-        "settings": {
-          "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
-        }
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "resources": {

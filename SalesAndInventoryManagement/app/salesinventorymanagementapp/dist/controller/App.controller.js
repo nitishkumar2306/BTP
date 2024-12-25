@@ -1,2 +1,2 @@
-sap.ui.define(["sap/ui/core/mvc/Controller"],e=>{"use strict";return e.extend("com.sap.salesinventorymanagementapp.controller.App",{onInit(){}})});
+sap.ui.define(["sap/ui/core/mvc/Controller","sap/ui/model/json/JSONModel"],(e,t)=>{"use strict";return e.extend("com.sap.salesinventorymanagementapp.controller.App",{onInit(){const e=this.getOwnerComponent().getModel("capModel");const t=e.bindList("/Products");t.requestContexts(0,5).then(e=>{const t=e.map(e=>e.getObject());console.log("Products:",t)})}})});
 //# sourceMappingURL=App.controller.js.map

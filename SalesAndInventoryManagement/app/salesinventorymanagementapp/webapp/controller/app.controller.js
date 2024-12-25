@@ -5,8 +5,6 @@ sap.ui.define([
 
     return Controller.extend("com.sap.salesinventorymanagementapp.controller.app", {
         onInit() {
-            var oModel = this.getView().getModel();
-            console.log("Model: ", oModel);
         }
     });
 });

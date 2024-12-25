@@ -7,7 +7,7 @@
   },
   "routes": [
     {
-      "source": "^/srv/(.*)$",
+      "source": "^/odata/(.*)$",
       "target": "/odata/$1",
       "authenticationType": "xsuaa",
       "destination": "SalesAndInventoryManagement-srv"
