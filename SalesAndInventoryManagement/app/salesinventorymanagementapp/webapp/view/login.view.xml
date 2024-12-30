@@ -1,0 +1,90 @@
+<mvc:View
+    controllerName="com.sap.salesinventorymanagementapp.controller.login"
+    displayBlock="true"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <App id="app">
+        <pages>
+            <Page showHeader="false">
+                <content>
+                    <VBox
+        alignItems="Center"
+        justifyContent="Center"
+        alignContent="Center"
+        fitContainer="true"
+        class="vbox"
+    >
+        <f:SimpleForm
+            id="SimpleFormDisplay_signin"
+            editable="false"
+            layout="ResponsiveGridLayout"
+            title="Enter User Details"
+            labelSpanXL="3"
+            labelSpanL="3"
+            labelSpanM="3"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="4"
+            emptySpanL="4"
+            emptySpanM="4"
+            emptySpanS="0"
+            columnsXL="1"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false"
+        >
+            <f:content>
+                <Label
+                    class="label"
+                    text="User Name"
+                    design="Bold"
+                    required="true"
+                />
+                <Input
+                    class="label"
+                    id="user_signin"
+                    placeholder="Enter UserName"
+                />
+
+
+                <Label
+                    class="label"
+                    text="Password"
+                    design="Bold"
+                    required="true"
+                />
+                <Input
+                    class="label"
+                    id="email_signin"
+                    type="Password"
+                    placeholder="Enter Password"
+                />
+                <HBox justifyContent="Center" alignItems="Center" width="100%">
+                <Button
+                    icon="sap-icon://visits"
+                    id="btn_signin"
+                    text="Sign In"
+                    type="Emphasized"
+                    press="onsignInClickLogin"
+                />
+                <ToolbarSpacer width="20px"/>
+                <Button
+                    icon="sap-icon://visits"
+                    id="signUpButton_login"
+                    text="Sign Up"
+                    type="Emphasized"
+                    press="onsignUpClickLogin"
+                />
+                </HBox>
+            </f:content>
+        </f:SimpleForm>
+    </VBox>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>

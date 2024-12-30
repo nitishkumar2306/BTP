@@ -1,0 +1,13 @@
+{
+    "roles": [
+        {
+            "Name": "Sales Rep"
+        },
+        {
+            "Name": "Inverntory Manager"
+        },
+        {
+            "Name": "Admin"
+        }
+    ]
+}

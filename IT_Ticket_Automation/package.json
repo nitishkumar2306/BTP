@@ -1,0 +1,37 @@
+{
+  "name": "IT_Ticket_Automation",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap/cds": "^8",
+    "@sap/hdi-deploy": "^5.3.2",
+    "@sap/xssec": "^4",
+    "express": "^4",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.7.0",
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "generate:default-env": "cf curl \"/v2/apps/$(cf app --guid IT_Ticket_Automation-srv)/env\" | npx node-jq -r '.system_env_json' > default-env.json",
+    "deplo yy:cf": "npx mbt build --mtar deploy.mtar && cf deploy ./mta_archives/deploy.mtar"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana-cloud"
+      },
+      "auth": "mocked"
+    },
+    "sql": {
+      "native_hana_associations": false
+    }
+  }
+}

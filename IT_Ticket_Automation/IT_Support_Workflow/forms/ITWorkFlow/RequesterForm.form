@@ -1,0 +1,90 @@
+{
+    "id": "requesterform",
+    "schemaVersion": "1.1.0",
+    "name": "RequesterForm",
+    "revision": "1",
+    "type": "task",
+    "readOnly": false,
+    "content": [
+        {
+            "id": "kindly_provide_details",
+            "type": "section",
+            "title": "Kindly provide following details",
+            "content": [
+                {
+                    "id": "ticket_type",
+                    "type": "string",
+                    "label": "Ticket Type",
+                    "readOnly": true,
+                    "value": "${context.TicketType}",
+                    "control": {
+                        "type": "Dropdown",
+                        "properties": {
+                            "items": [
+                                {
+                                    "value": "New Laptop",
+                                    "displayValue": "New Laptop"
+                                },
+                                {
+                                    "value": "Sowtware Installation",
+                                    "displayValue": "Sowtware Installation"
+                                },
+                                {
+                                    "value": "Hardware Problem",
+                                    "displayValue": "Hardware Problem"
+                                },
+                                {
+                                    "value": "System Updates",
+                                    "displayValue": "System Updates"
+                                },
+                                {
+                                    "value": "Others",
+                                    "displayValue": "Others"
+                                }
+                            ]
+                        }
+                    },
+                    "constraints": {
+                        "required": true,
+                        "enum": [
+                            "New Laptop",
+                            "Sowtware Installation",
+                            "Hardware Problem",
+                            "System Updates",
+                            "Others"
+                        ]
+                    }
+                },
+                {
+                    "id": "description",
+                    "type": "string",
+                    "label": "Description",
+                    "placeholder": "provide the description",
+                    "readOnly": false,
+                    "value": "${context.Description}",
+                    "control": {
+                        "type": "TextArea",
+                        "properties": {
+                            "height": "medium"
+                        }
+                    },
+                    "constraints": {
+                        "required": false
+                    }
+                }
+            ]
+        }
+    ],
+    "decisions": [
+        {
+            "id": "submit",
+            "text": "Submit",
+            "decisionType": "positive"
+        },
+        {
+            "id": "cancel",
+            "text": "Cancel",
+            "decisionType": "negative"
+        }
+    ]
+}
