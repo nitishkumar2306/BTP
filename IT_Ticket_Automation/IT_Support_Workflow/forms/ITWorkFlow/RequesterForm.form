@@ -15,44 +15,10 @@
                     "id": "ticket_type",
                     "type": "string",
                     "label": "Ticket Type",
-                    "readOnly": true,
+                    "readOnly": false,
                     "value": "${context.TicketType}",
-                    "control": {
-                        "type": "Dropdown",
-                        "properties": {
-                            "items": [
-                                {
-                                    "value": "New Laptop",
-                                    "displayValue": "New Laptop"
-                                },
-                                {
-                                    "value": "Sowtware Installation",
-                                    "displayValue": "Sowtware Installation"
-                                },
-                                {
-                                    "value": "Hardware Problem",
-                                    "displayValue": "Hardware Problem"
-                                },
-                                {
-                                    "value": "System Updates",
-                                    "displayValue": "System Updates"
-                                },
-                                {
-                                    "value": "Others",
-                                    "displayValue": "Others"
-                                }
-                            ]
-                        }
-                    },
                     "constraints": {
-                        "required": true,
-                        "enum": [
-                            "New Laptop",
-                            "Sowtware Installation",
-                            "Hardware Problem",
-                            "System Updates",
-                            "Others"
-                        ]
+                        "required": true
                     }
                 },
                 {

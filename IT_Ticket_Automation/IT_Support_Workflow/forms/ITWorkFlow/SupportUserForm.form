@@ -1,0 +1,99 @@
+{
+    "id": "supportuserform",
+    "schemaVersion": "1.1.0",
+    "name": "SupportUserForm",
+    "revision": "1",
+    "type": "task",
+    "readOnly": false,
+    "content": [
+        {
+            "id": "ticket_details",
+            "type": "section",
+            "title": "Ticket Details",
+            "content": [
+                {
+                    "id": "details",
+                    "type": "subsection",
+                    "title": "Details",
+                    "content": [
+                        {
+                            "id": "requester",
+                            "type": "string",
+                            "label": "Requester",
+                            "readOnly": false,
+                            "value": "${context.requester}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "ticket_type",
+                            "type": "string",
+                            "label": "Ticket Type",
+                            "readOnly": true,
+                            "value": "${context.TicketType}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "description",
+                            "type": "string",
+                            "label": "Description",
+                            "readOnly": true,
+                            "value": "${context.Description}",
+                            "control": {
+                                "type": "TextArea",
+                                "properties": {
+                                    "height": "small"
+                                }
+                            },
+                            "constraints": {
+                                "required": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "support_details",
+            "type": "section",
+            "title": "HR Details",
+            "content": [
+                {
+                    "id": "name",
+                    "type": "string",
+                    "label": "Name",
+                    "readOnly": true,
+                    "value": "${context.HR.fullname}",
+                    "constraints": {
+                        "required": false
+                    }
+                },
+                {
+                    "id": "email",
+                    "type": "string",
+                    "label": "Email",
+                    "readOnly": true,
+                    "value": "${context.HR.email}",
+                    "constraints": {
+                        "required": false
+                    }
+                }
+            ]
+        }
+    ],
+    "decisions": [
+        {
+            "id": "approve",
+            "text": "Approve",
+            "decisionType": ""
+        },
+        {
+            "id": "reject",
+            "text": "Reject",
+            "decisionType": ""
+        }
+    ]
+}
