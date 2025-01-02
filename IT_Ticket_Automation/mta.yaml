@@ -8,6 +8,7 @@ modules:
   path: gen/srv
   requires:
   - name: IT_Ticket_Automation-HDI-Container
+  - name: sap_processautomation
   provides:
   - name: srv-api
     properties:
