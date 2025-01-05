@@ -17,8 +17,42 @@
                     "label": "Ticket Type",
                     "readOnly": false,
                     "value": "${context.TicketType}",
+                    "control": {
+                        "type": "Dropdown",
+                        "properties": {
+                            "items": [
+                                {
+                                    "value": "New Laptop",
+                                    "displayValue": "New Laptop"
+                                },
+                                {
+                                    "value": "System Updates",
+                                    "displayValue": "System Updates"
+                                },
+                                {
+                                    "value": "Sowtware Installation",
+                                    "displayValue": "Sowtware Installation"
+                                },
+                                {
+                                    "value": "Hardware Problem",
+                                    "displayValue": "Hardware Problem"
+                                },
+                                {
+                                    "value": "Others",
+                                    "displayValue": "Others"
+                                }
+                            ]
+                        }
+                    },
                     "constraints": {
-                        "required": true
+                        "required": true,
+                        "enum": [
+                            "New Laptop",
+                            "System Updates",
+                            "Sowtware Installation",
+                            "Hardware Problem",
+                            "Others"
+                        ]
                     }
                 },
                 {

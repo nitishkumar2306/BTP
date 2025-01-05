@@ -88,11 +88,16 @@
         {
             "id": "approve",
             "text": "Approve",
-            "decisionType": ""
+            "decisionType": "positive"
         },
         {
             "id": "reject",
             "text": "Reject",
+            "decisionType": "negative"
+        },
+        {
+            "id": "reject_all",
+            "text": "Reject All",
             "decisionType": ""
         }
     ]

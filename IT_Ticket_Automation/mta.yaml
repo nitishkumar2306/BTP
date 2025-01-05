@@ -37,6 +37,17 @@ modules:
         config:
           deployUsageScenario: workflow
         name: spa-workflow-service-key
+- name: Support_User_Subflow
+  type: com.sap.application.content
+  path: Support_User_Subflow
+  requires:
+  - name: sap_processautomation
+    parameters:
+      content-target: true
+      service-key:
+        config:
+          deployUsageScenario: workflow
+        name: spa-workflow-service-key
 resources:
 - name: IT_Ticket_Automation-HDI-Container
   type: com.sap.xs.hdi-container

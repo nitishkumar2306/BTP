@@ -55,34 +55,78 @@
             "title": "Support Details",
             "content": [
                 {
-                    "id": "name",
-                    "type": "string",
-                    "label": "Name",
-                    "readOnly": true,
-                    "value": "${context.Support_User.fullname}",
-                    "constraints": {
-                        "required": false
-                    }
+                    "id": "support_user_1",
+                    "type": "subsection",
+                    "title": "Support User 1",
+                    "content": [
+                        {
+                            "id": "name",
+                            "type": "string",
+                            "label": "Name",
+                            "readOnly": true,
+                            "value": "${context.Support_User[0].fullname}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "email",
+                            "type": "string",
+                            "label": "Email",
+                            "readOnly": true,
+                            "value": "${context.Support_User[0].email}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "designation",
+                            "type": "string",
+                            "label": "Designation",
+                            "readOnly": true,
+                            "value": "${context.Support_User[0].designation}",
+                            "constraints": {
+                                "required": false
+                            }
+                        }
+                    ]
                 },
                 {
-                    "id": "email",
-                    "type": "string",
-                    "label": "Email",
-                    "readOnly": true,
-                    "value": "${context.Support_User.email}",
-                    "constraints": {
-                        "required": false
-                    }
-                },
-                {
-                    "id": "designation",
-                    "type": "string",
-                    "label": "Designation",
-                    "readOnly": true,
-                    "value": "${context.Support_User.designation}",
-                    "constraints": {
-                        "required": false
-                    }
+                    "id": "support_user_2",
+                    "type": "subsection",
+                    "title": "Support User 2",
+                    "content": [
+                        {
+                            "id": "name",
+                            "type": "string",
+                            "label": "Name",
+                            "readOnly": false,
+                            "value": "${context.Support_User[1].fullname}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "email",
+                            "type": "string",
+                            "label": "Email",
+                            "readOnly": false,
+                            "value": "${context.Support_User[1].email}",
+                            "constraints": {
+                                "required": false
+                            }
+                        },
+                        {
+                            "id": "designation",
+                            "type": "string",
+                            "label": "Designation",
+                            "readOnly": false,
+                            "value": "${context.Support_User[1].designation}",
+                            "constraints": {
+                                "required": false
+                            }
+                        }
+                    ]
                 }
             ]
         }
