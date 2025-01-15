@@ -6,6 +6,8 @@ type placeOrderReturnType {
     totalCost : Decimal(10, 2)
 };
 
+// @cds.query.limit.default: 20
+// @cds.query.limit.max: 100
 // @cds.persistence: 'db'
 @(requires: 'authenticated-user')
 service CatalogService {
