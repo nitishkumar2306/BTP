@@ -1,0 +1,16 @@
+<mvc:View controllerName="com.sap.salesinventorymanagementapp.controller.notFound"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page title="{i18n>notFoundPage}">
+    	<content>
+			<VBox>
+				<Text text="{i18n>notFoundPageText}" />
+                <Link
+				text="{i18n>navToOverviewLinkText}"
+				endIcon="sap-icon://inspect"
+				press="handleLinkPress" />
+			</VBox>
+		</content>
+    </Page>
+
+</mvc:View>

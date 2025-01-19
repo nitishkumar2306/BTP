@@ -1,0 +1,55 @@
+<mvc:View controllerName="com.sap.salesinventorymanagementapp.controller.home"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+<Table id="idProductsTable"
+	growing="true"
+	growingThreshold="20"
+	alternateRowColors="true"
+	busyIndicatorDelay="10000"
+		items="{
+			path: '/Products',
+			parameters:{
+				$count: true
+			}
+		}">
+		<headerToolbar>
+			<OverflowToolbar>
+				<content>
+					<Title text="Products" level="H2"/>
+					<ToolbarSpacer />
+					<SearchField id="searchField" width="20%" placeholder="Search with Product Name" search=".onSearch"/>
+				</content>
+			</OverflowToolbar>
+		</headerToolbar>
+		<infoToolbar>
+		</infoToolbar>
+		<columns>
+			<Column>
+				<Text text="Product Name" />
+			</Column>
+			<Column>
+				<Text text="Reorder Level" />
+			</Column>
+			<Column>
+				<Text text="Unit Price" />
+			</Column>
+			<Column>
+				<Text text="Units In Stock" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Navigation" press=".onPress">
+				<cells>
+					<Text
+						text="{productName}" />
+					<Text
+						text="{reorderLevel}" />
+					<Text
+						text="{unitPrice}" />
+					<Text
+						text="{unitsInStock}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+	</Table>
+</mvc:View>

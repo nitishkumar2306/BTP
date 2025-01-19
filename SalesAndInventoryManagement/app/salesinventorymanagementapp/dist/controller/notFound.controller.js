@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/Controller","sap/ui/core/UIComponent"],(e,n)=>{"use strict";return e.extend("com.sap.salesinventorymanagementapp.controller.notFound",{onInit(){},handleLinkPress:function(){var e=n.getRouterFor(this);e.navTo("homeRoute",{})}})});
+//# sourceMappingURL=notFound.controller.js.map

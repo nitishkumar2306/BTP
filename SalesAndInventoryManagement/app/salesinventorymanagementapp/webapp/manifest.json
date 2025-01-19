@@ -79,7 +79,7 @@
           "bundleName": "com.sap.salesinventorymanagementapp.i18n.i18n"
         }
       },
-      "capModel": {
+      "": {
       "dataSource": "mainService",
       "preload": true,
       "settings": {
@@ -105,32 +105,57 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "controlAggregation": "pages",
+        "async": true,
         "controlId": "app",
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
-        "path": "com.sap.salesinventorymanagementapp.login"
+        "path": "com.sap.salesinventorymanagementapp.view",
+        "bypassed": {
+          "target":[
+            "notFound"
+          ]
+        }
       },
       "routes": [
         {
-          "name": "Routeapp",
+          "name": "homeRoute",
           "pattern": "",
           "target": [
-            "Targetapp"
+            "homeTarget"
+          ]
+        },
+        {
+          "name": "detailRoute",
+          "pattern": "details/{productId}",
+          "target": [
+            "detailTarget"
           ]
         }
       ],
       "targets": {
-        "Targetapp": {
-          "id": "app",
-          "name": "app"
+        "homeTarget": {
+          "viewType": "XML",
+          "id": "home",
+          "name": "home"
+        },
+        "detailTarget":{
+          "viewType": "XML",
+          "id": "details",
+          "name": "details"
+        },
+        "notFound":{
+          "viewType": "XML",
+          "id": "notFound",
+          "name": "notFound",
+          "transition": "show"    
         }
       }
     },
     "rootView": {
-      "viewName": "com.sap.salesinventorymanagementapp.view.login",
+      "viewName": "com.sap.salesinventorymanagementapp.view.App",
       "type": "XML",
-      "id": "App"
+      "id": "app"
     }
   }
 }
