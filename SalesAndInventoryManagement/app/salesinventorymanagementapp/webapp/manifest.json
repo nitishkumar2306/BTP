@@ -83,6 +83,7 @@
       "dataSource": "mainService",
       "preload": true,
       "settings": {
+        "updateGroupId": "updateGroup",
         "operationMode": "Server",
         "synchronizationMode": "None",
         "autoExpandSelect": true

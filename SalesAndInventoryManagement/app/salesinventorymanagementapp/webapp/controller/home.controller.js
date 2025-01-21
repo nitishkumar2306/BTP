@@ -31,6 +31,10 @@ sap.ui.define([
             oRouter.navTo("detailRoute",{
                 productId: prodId
             });
+        },
+
+        onProductCreate: function(){
+            
         }
 
     });

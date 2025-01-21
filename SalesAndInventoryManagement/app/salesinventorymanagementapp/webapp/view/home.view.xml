@@ -18,6 +18,7 @@
 					<Title text="Products" level="H2"/>
 					<ToolbarSpacer />
 					<SearchField id="searchField" width="20%" placeholder="Search with Product Name" search=".onSearch"/>
+					<Button icon="sap-icon://create" press="onProductCreate"/>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>

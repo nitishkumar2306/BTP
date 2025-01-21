@@ -9,9 +9,9 @@ module.exports = cds.service.impl(async function () {
         try {
             // Connect to the northwindAPI service defined in package.json
             const northwindAPI = await cds.connect.to('northwindAPI');
-            
+
             const response = await northwindAPI.get('/Products');
-            
+
             console.log('===========Result:', response);
             LOG.info('Successfully retrieved data from Northwind service');
             return response;
@@ -31,31 +31,40 @@ module.exports = cds.service.impl(async function () {
 
     this.before(['READ', 'CREATE', 'UPDATE', 'DELETE'], 'Customers', async (req) => {
         if (req.user.is('Admin')) return // Admin has full access
-        
+
         if (req.user.is('SalesReps')) {
             // Add filter for SalesRep's customers only
             const SELECT = cds.parse.cql(`SELECT 1 FROM Orders WHERE Orders.CustomerID = Customers.CustomerID AND Orders.EmployeeID = '${req.user.id}'`)
             req.query.where(SELECT)
             return
         }
-        
+
         if (req.user.is('InventoryManager')) {
             if (req.event !== 'READ') {
                 return req.reject(403, 'InventoryManager has read-only access to Customers')
             }
             return
         }
-        
+
         return req.reject(403, 'Insufficient permissions')
     })
 
-   
+    this.before(['UPDATE'], 'Products', async (req) => {
+        //debugger;
+        const { productName, quantityPerUnit, unitPrice, unitsInStock, reorderLevel, unitsOnOrder } = req.data || {};
+        // Validate the input
+        if (isNaN(unitsInStock) || parseInt(unitsInStock) < 25) {
+            return req.reject(400, 'Units in Stock cannot be less than 25.');
+        }
+    })
+
+
 
     this.after('UPDATE', 'Products', async (data) => {
-      
+
         const productId = data.productId;
         const product = await SELECT.from('CatalogService_Products').where({ productId: productId });
-        console.log('=====line num 49', product);
+        //console.log('=====line num 49', product);
 
         if (product[0].UNITSINSTOCK >= product[0].REORDERLEVEL) {
             const managers = await SELECT.from('CatalogService_Users').where({ Role: 'InventoryManager' });
@@ -63,7 +72,7 @@ module.exports = cds.service.impl(async function () {
             if (managers.length > 0) {
                 //console.log('=====line num 55');
                 for (const manager of managers) {
-                    console.log('=====line num 18', manager.EMAIL);
+                    //console.log('=====line num 18', manager.EMAIL);
                     const mailConfig = {
                         to: manager.email,
                         subject: `Low Stock Alert: ${product[0].PRODUCTNAME}`,
@@ -78,10 +87,10 @@ module.exports = cds.service.impl(async function () {
 
                     try {
                         await sendMail({ destinationName: 'mail_destination' }, [mailConfig]);
-                        
-                        console.log(`======Stock alert email sent to manager: ${manager.EMAIL}======`);
+
+                        //console.log(`======Stock alert email sent to manager: ${manager.EMAIL}======`);
                     } catch (error) {
-                        console.error(`=======Failed to send stock alert email to ${manager.EMAIL}:======`, error.message);
+                        //console.error(`=======Failed to send stock alert email to ${manager.EMAIL}:======`, error.message);
 
                     }
                 }
@@ -90,7 +99,7 @@ module.exports = cds.service.impl(async function () {
     })
 
     this.on('placeOrder', async (req) => {
-        
+
         const { input } = req.data;
         let totalCost = 0;
         try {
@@ -121,12 +130,12 @@ module.exports = cds.service.impl(async function () {
                 if (!product.length) {
                     req.error(400, `Product with ID ${item.productId} not found`);
                 }
-            
+
                 // Use camelCase property names as defined in the CDS model
                 if (product[0].unitsInStock < item.quantity) {
                     req.error(400, `Insufficient stock for the product ${item.productId}`);
                 }
-            
+
                 const orderDetail = {
                     orderDetailsId: cds.utils.uuid(),
                     orderId: orderId,
@@ -197,7 +206,7 @@ module.exports = cds.service.impl(async function () {
                 'Cancelled': [],
                 'Returned': ['Pending']
             }
-            
+
             const order = await SELECT.from('CatalogService_Orders').where({ orderId: orderId }).columns(['orderStatus', 'customerId']);
 
             if (!order.length) {
@@ -231,7 +240,7 @@ module.exports = cds.service.impl(async function () {
             };
             const srv = await cds.connect.to('CatalogService');
             await srv.update('Orders').where({ orderId: orderId }).set({ orderStatus: newStatus });
-            
+
             // await cds.transaction(req).run([
             //     srv.update('CatalogService_Orders').set({ orderStatus: newStatus }).where({ orderId: orderId }),
             //     srv.create('CatalogService_OrderStatusHistory').entries(onerowdata)
@@ -298,12 +307,12 @@ module.exports = cds.service.impl(async function () {
         }
     })
 
-//     async function getUnitPrice(productId) {
-//         const product = await cds.tx(req).run(
-//             SELECT.one.from('CatalogService_Products').where({ ProductID: productID })
-//         );
-//         return product.UnitPrice;
-//     }
+    //     async function getUnitPrice(productId) {
+    //         const product = await cds.tx(req).run(
+    //             SELECT.one.from('CatalogService_Products').where({ ProductID: productID })
+    //         );
+    //         return product.UnitPrice;
+    //     }
 
     this.on('restoreProductStocksBatch', async (req) => {
         //console.log('====== req:', req.user);
@@ -527,5 +536,5 @@ module.exports = cds.service.impl(async function () {
             req.error(500, `Error calculating total revenue: ${error.message}`);
         }
     });
-//     //return service
+    //     //return service
 });
