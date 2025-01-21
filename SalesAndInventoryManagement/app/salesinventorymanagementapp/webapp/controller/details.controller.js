@@ -121,21 +121,5 @@ sap.ui.define([
                 MessageToast.show(sErrorMessage);
             });
         }
-        // ,
-        // onProductCreate: function(){
-        //     var createProductDataJSONModel = new JSON({
-        //         productID: globalThis.crypto.randomUUID(),
-        //         supplierID: "",
-        //         productName:  "",
-        //         quantityPerUnit:  "",
-        //         unitPrice:  "",
-        //         unitsInStock:  "",
-        //         unitsOnOrder:  "",
-        //         reorderLevel: "",
-        //         discontinued: ""
-        //     });
-
-        //     this.getView().setModel()
-        // }
     });
 });

@@ -7,7 +7,6 @@ type OrderStatus : String enum{
     Delivered;
     Cancelled;
     Returned;
-
 }
 entity users {
     key UserID : UUID;
