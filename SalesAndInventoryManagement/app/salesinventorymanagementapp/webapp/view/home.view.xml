@@ -3,6 +3,8 @@
     xmlns="sap.m">
 <Table id="idProductsTable"
 	growing="true"
+	mode="SingleSelectLeft"
+	sticky="ColumnHeaders"
 	growingThreshold="20"
 	alternateRowColors="true"
 	busyIndicatorDelay="10000"
@@ -18,7 +20,8 @@
 					<Title text="Products" level="H2"/>
 					<ToolbarSpacer />
 					<SearchField id="searchField" width="20%" placeholder="Search with Product Name" search=".onSearch"/>
-					<Button icon="sap-icon://create" press="onProductCreate"/>
+					<Button icon="sap-icon://add" press="onProductCreate" tooltip="{i18n>addProductText}"/>
+					<Button id="deleteUserButton" icon="sap-icon://delete" tooltip="{i18n>deleteProductText}" press=".onProductDelete"/>
 				</content>
 			</OverflowToolbar>
 		</headerToolbar>
