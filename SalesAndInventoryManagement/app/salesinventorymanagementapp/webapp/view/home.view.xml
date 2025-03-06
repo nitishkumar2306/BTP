@@ -1,59 +1,128 @@
 <mvc:View controllerName="com.sap.salesinventorymanagementapp.controller.home"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
-<Table id="idProductsTable"
-	growing="true"
-	mode="SingleSelectLeft"
-	sticky="ColumnHeaders"
-	growingThreshold="20"
-	alternateRowColors="true"
-	busyIndicatorDelay="10000"
-		items="{
-			path: '/Products',
-			parameters:{
-				$count: true
-			}
-		}">
-		<headerToolbar>
-			<OverflowToolbar>
-				<content>
-					<Title text="Products" level="H2"/>
-					<ToolbarSpacer />
-					<SearchField id="searchField" width="20%" placeholder="Search with Product Name" search=".onSearch"/>
-					<Button icon="sap-icon://add" press="onProductCreate" tooltip="{i18n>addProductText}"/>
-					<Button id="deleteUserButton" icon="sap-icon://delete" tooltip="{i18n>deleteProductText}" press=".onProductDelete"/>
-				</content>
-			</OverflowToolbar>
-		</headerToolbar>
-		<infoToolbar>
-		</infoToolbar>
-		<columns>
-			<Column>
-				<Text text="Product Name" />
-			</Column>
-			<Column>
-				<Text text="Reorder Level" />
-			</Column>
-			<Column>
-				<Text text="Unit Price" />
-			</Column>
-			<Column>
-				<Text text="Units In Stock" />
-			</Column>
-		</columns>
-		<items>
-			<ColumnListItem type="Navigation" press=".onPress">
-				<cells>
-					<Text
-						text="{productName}" />
-					<Text
-						text="{reorderLevel}" />
-					<Text
-						text="{unitPrice}" />
-					<Text
-						text="{unitsInStock}" />
-				</cells>
-			</ColumnListItem>
-		</items>
-	</Table>
+    xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:card="sap.f.cards"
+	xmlns:tnt="sap.tnt"
+	displayBlock="true"
+	height="100%">
+	<ScrollContainer vertical="true" height="100%">
+		<tnt:ToolHeader id="shellLikeToolHeader" class="sapUiTinyMargin">
+			<Button icon="sap-icon://menu2" type="Transparent" tooltip="Menu">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="NeverOverflow"/>
+				</layoutData>
+			</Button>
+			<Image src="../test-resources/sap/tnt/images/AppIcon_1.png" decorative="false" press="onLogoPressed" tooltip="SAP Logo">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="NeverOverflow"/>
+				</layoutData>
+			</Image>
+			<Title text="{i18n>appTitle}" wrapping="false" id="salesInventoryManagementTitle">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="Disappear"/>
+				</layoutData>
+			</Title>
+			<ToolbarSpacer/>
+			<ToolbarSpacer id="spacer">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="Low" group="1"/>
+				</layoutData>
+			</ToolbarSpacer>
+			<Button visible="false" icon="sap-icon://search" type="Transparent" id="searchButton" tooltip="Search"/>
+			<OverflowToolbarButton icon="sap-icon://source-code" type="Transparent" tooltip="Action 1" text="Action 1">
+				<layoutData>
+					<OverflowToolbarLayoutData group="2"/>
+				</layoutData>
+			</OverflowToolbarButton>
+			<OverflowToolbarButton icon="sap-icon://card" type="Transparent" tooltip="Action 2" text="Action 2">
+				<layoutData>
+					<OverflowToolbarLayoutData group="2"/>
+				</layoutData>
+			</OverflowToolbarButton>
+			<ToolbarSeparator>
+				<layoutData>
+					<OverflowToolbarLayoutData group="2"/>
+				</layoutData>
+			</ToolbarSeparator>
+			<OverflowToolbarButton icon="sap-icon://action-settings" type="Transparent" text="Settings"/>
+			<Button icon="sap-icon://bell" type="Transparent" tooltip="Notification">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="NeverOverflow"/>
+				</layoutData>
+			</Button>
+			<tnt:ToolHeaderUtilitySeparator/>
+			<ToolbarSpacer width="1.125rem"/>
+			<Avatar src="test-resources/sap/tnt/images/Woman_avatar_01.png" displaySize="XS" press=".onAvatarPressed" tooltip="Profile">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="NeverOverflow"/>
+				</layoutData>
+			</Avatar>
+		</tnt:ToolHeader>
+		<f:Card class="sapUiMediumMargin" width="250px" height="150px">
+			<f:header>
+				<card:Header title="{i18n>productData}"/>
+			</f:header>
+			<f:content>
+				<VBox
+					height="110px"
+					class="sapUiSmallMargin"
+					justifyContent="SpaceBetween">
+					<Button text="{i18n>getProductData}" press="onProductCardPress"></Button>
+				</VBox>
+			</f:content>
+		</f:Card>
+		<f:Card class="sapUiMediumMargin" width="250px" height="150px">
+			<f:header>
+				<card:Header title="{i18n>customerData}"/>
+			</f:header>
+			<f:content>
+				<VBox
+					height="110px"
+					class="sapUiSmallMargin"
+					justifyContent="SpaceBetween">
+					<Button text="{i18n>getCustomersData}"></Button>
+				</VBox>
+			</f:content>
+		</f:Card>
+		<f:Card class="sapUiMediumMargin" width="250px" height="150px">
+			<f:header>
+				<card:Header title="{i18n>ordersData}"/>
+			</f:header>
+			<f:content>
+				<VBox
+					height="110px"
+					class="sapUiSmallMargin"
+					justifyContent="SpaceBetween">
+					<Button text="{i18n>getOrdersData}"></Button>
+				</VBox>
+			</f:content>
+		</f:Card>
+		<f:Card class="sapUiMediumMargin" width="250px" height="150px">
+			<f:header>
+				<card:Header title="{i18n>ordersDetailsData}"/>
+			</f:header>
+			<f:content>
+				<VBox
+					height="110px"
+					class="sapUiSmallMargin"
+					justifyContent="SpaceBetween">
+					<Button text="{i18n>getOrderDetailsData}"></Button>
+				</VBox>
+			</f:content>
+		</f:Card>
+		<f:Card class="sapUiMediumMargin" width="250px" height="150px">
+			<f:header>
+				<card:Header title="{i18n>supplierData}"/>
+			</f:header>
+			<f:content>
+				<VBox
+					height="110px"
+					class="sapUiSmallMargin"
+					justifyContent="SpaceBetween">
+					<Button text="{i18n>getSuppliersData}"></Button>
+				</VBox>
+			</f:content>
+		</f:Card>
+	</ScrollContainer>
 </mvc:View>

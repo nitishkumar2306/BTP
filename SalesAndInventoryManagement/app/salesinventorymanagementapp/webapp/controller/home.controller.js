@@ -6,12 +6,28 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast"
-], (Controller, Filter, FilterOperator, FilterType, UIComponent, JSONModel,MessageToast) => {
+], (Controller, Filter, FilterOperator, FilterType, UIComponent, JSONModel, MessageToast) => {
     "use strict";
 
     return Controller.extend("com.sap.salesinventorymanagementapp.controller.home", {
         onInit() {
+            var oModel = this.getOwnerComponent().getModel("loggedInUserModel");
 
+            // Bind the context to fetch a single entity
+            var oContextBinding = oModel.bindContext("/currentUser");
+            
+            // Fetch data from backend
+            oContextBinding.requestObject().then(function(oData) {
+                console.log("Logged-in user details:", oData);
+            }).catch(function(oError) {
+                console.error("Error fetching user details:", oError);
+            });
+        },
+        onCloseProductDataTableDialog: function () {
+            this.byId("productDataTableDialog").close();
+        },
+        onProductCardPress: async function () {
+            console.log("Product Card Pressed");
         },
         onSearch: function () {
             var oView = this.getView();
@@ -93,7 +109,7 @@ sap.ui.define([
             this.byId("productCreateFragmentDialog").close();
         },
         onProductDelete: function () {
-            var oView= this.getView();
+            var oView = this.getView();
             var oResourceBundle = oView.getModel("i18n").getResourceBundle();
             var oContext,
                 oSelected = this.byId("idProductsTable").getSelectedItem(), sUserName;
@@ -119,6 +135,5 @@ sap.ui.define([
                 //this._setUIChanges();
             }
         }
-
     });
 });

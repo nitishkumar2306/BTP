@@ -6,38 +6,50 @@
 	xmlns:core="sap.ui.core">
     <Page showNavButton= "true" navButtonPress="handleNavButton">
         <VBox class="sapUiSmallMargin">
-            <f:SimpleForm id="SimpleFormDisplay354"
-                editable="false"
-                layout="ResponsiveGridLayout"
-                title="{productName}"
-                labelSpanXL="3"
-                labelSpanL="3"
-                labelSpanM="3"
-                labelSpanS="12"
-                adjustLabelSpan="false"
-                emptySpanXL="4"
-                emptySpanL="4"
-                emptySpanM="4"
-                emptySpanS="0"
-                columnsXL="1"
-                columnsL="1"
-                columnsM="1"
-                singleContainerFullSize="false" >
-                <f:content>
+		<f:SimpleForm id="SimpleFormToolbar"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			labelSpanXL="4"
+			labelSpanL="3"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="4"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false"
+			ariaLabelledBy="Title1" >
+			<f:toolbar>
+				<Toolbar id="TB1">
+					<Title id="Title1" text="{i18n>productData}"/>
+				</Toolbar>
+			</f:toolbar>
+			<f:content>
+				<Toolbar ariaLabelledBy="Title2">
+					<ToolbarSpacer />
+					<Button icon="sap-icon://edit" press="onProductEdit"/>
+                    <Button icon="sap-icon://save" press="onProductSave"/>
+				</Toolbar>
                 <Label text="{i18n>productId}" />
-				<Input id="productId" value="{productId}" />
+				<Input id="productId" value="{productId}" enabled="false"/>
+				<Label text="{i18n>productName}" />
+				<Input id="productName" value="{productName}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
                 <Label text="{i18n>quantityPerUnit}" />
-				<Input id="quantityPerUnit" value="{quantityPerUnit}" />
+				<Input id="quantityPerUnit" value="{quantityPerUnit}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
                 <Label text="{i18n>reorderLevel}" />
-				<Input id="reorderLevel" value="{reorderLevel}" />
+				<Input id="reorderLevel" value="{reorderLevel}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
                 <Label text="{i18n>unitPrice}" />
-				<Input id="unitPrice" value="{unitPrice}" />
+				<Input id="unitPrice" value="{unitPrice}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
                 <Label text="{i18n>unitsInStock}" />
-				<Input id="unitsInStock" value="{unitsInStock}" />
+				<Input id="unitsInStock" value="{unitsInStock}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
                 <Label text="{i18n>unitsOnOrder}" />
-				<Input id="unitsOnOrder" value="{unitsOnOrder}" />
-                </f:content>
-            </f:SimpleForm>
-        </VBox>
+				<Input id="unitsOnOrder" value="{unitsOnOrder}" enabled="{oProductEnableModel>/isProductsDataEditable}"/>
+			</f:content>
+		</f:SimpleForm>
+	</VBox>
     </Page>
 </mvc:View>

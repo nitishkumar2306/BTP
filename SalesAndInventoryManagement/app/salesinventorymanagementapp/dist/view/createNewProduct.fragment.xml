@@ -1,0 +1,68 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form">
+  <Dialog
+    id="productCreateFragmentDialog"
+    title="{i18n>createProductFragmentTitle}">
+            <VBox class="sapUiSmallMargin">
+		<f:SimpleForm id="producCreateFragmentDialogForm"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			labelSpanXL="4"
+			labelSpanL="3"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="4"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="1"
+			columnsM="1"
+			singleContainerFullSize="false"
+			ariaLabelledBy="Title1" >
+			<f:toolbar>
+				<Toolbar id="TB2">
+					<Title id="Title2" text="{i18n>createProductFragmentTitle}"/>
+				</Toolbar>
+			</f:toolbar>
+			<f:content>
+			<Label text="{i18n>productName}" />
+			<Input id="productNameCreateFragment" value="{productCreateModel>/productName}" required="true"/>
+            <Label text="{i18n>quantityPerUnit}" />
+			<Input id="quantityPerUnitCreateFragment" value="{productCreateModel>/quantityPerUnit}" required="true"/>
+            <Label text="{i18n>reorderLevel}" />
+			<Input id="reorderLevelCreateFragment" value="{productCreateModel>/reorderLevel}" required="true"/>
+            <Label text="{i18n>unitPrice}" />
+			<Input id="unitPriceCreateFragment" value="{productCreateModel>/unitPrice}" required="true"/>
+            <Label text="{i18n>supplier}" />
+			<ComboBox id="supplierCreateFragment"
+			items="{
+				path: '/Suppliers'
+			}">
+			<core:Item key="{supplierId}" text="{companyName}" />
+			</ComboBox>
+            <Label text="{i18n>unitsInStock}" />
+			<Input id="unitsInStockCreateFragment" value="{productCreateModel>/unitsInStock}" required="true"/>
+            <Label text="{i18n>unitsOnOrder}" />
+			<Input id="unitsOnOrderCreateFragment" value="{productCreateModel>/unitsOnOrder}" required="true"/>
+			</f:content>
+		</f:SimpleForm>
+        <HBox justifyContent="SpaceAround">
+            <Button
+            text="{i18n>create}"
+            type="Emphasized"
+            press=".onCreateProductDialog"
+            width="120px"/>
+            <ToolbarSpacer/>
+            <Button
+            text="{i18n>close}"
+            press=".onCloseProductDialog"
+            width="120px"/>
+        </HBox>
+	</VBox>
+
+  </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,64 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.ui.layout.form">
+  <Dialog
+    id="productDataFragmentDialog"
+    title="{i18n>createProductFragmentTitle}">
+        <Table id="idProductsTable"
+				growing="true"
+				mode="SingleSelectLeft"
+				sticky="ColumnHeaders"
+				growingThreshold="20"
+				alternateRowColors="true"
+				busyIndicatorDelay="10000"
+					items="{
+						path: '/Products',
+						parameters:{
+							$count: true
+						}
+					}">
+					<headerToolbar>
+						<OverflowToolbar>
+							<content>
+								<Title text="Products" level="H2"/>
+								<ToolbarSpacer />
+								<SearchField id="searchField" width="20%" placeholder="Search with Product Name" search=".onSearch"/>
+								<Button icon="sap-icon://add" press="onProductCreate" tooltip="{i18n>addProductText}"/>
+								<Button id="deleteUserButton" icon="sap-icon://delete" tooltip="{i18n>deleteProductText}" press=".onProductDelete"/>
+							</content>
+						</OverflowToolbar>
+					</headerToolbar>
+					<infoToolbar>
+					</infoToolbar>
+					<columns>
+						<Column>
+							<Text text="Product Name" />
+						</Column>
+						<Column>
+							<Text text="Reorder Level" />
+						</Column>
+						<Column>
+							<Text text="Unit Price" />
+						</Column>
+						<Column>
+							<Text text="Units In Stock" />
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Navigation" press=".onPress">
+							<cells>
+								<Text
+									text="{productName}" />
+								<Text
+									text="{reorderLevel}" />
+								<Text
+									text="{unitPrice}" />
+								<Text
+									text="{unitsInStock}" />
+							</cells>
+				        </ColumnListItem>
+			        </items>
+		</Table>       
+  </Dialog>
+</core:FragmentDefinition>

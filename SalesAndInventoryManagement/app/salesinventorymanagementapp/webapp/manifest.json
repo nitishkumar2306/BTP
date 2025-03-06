@@ -27,6 +27,14 @@
       "testSource":{
         "uri": "model/object.json",
         "type": "JSON"
+      },
+      "loggedInUser":{
+        "uri": "/user-api/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "4.0"
+        }
       }
     },
     "crossNavigation": {
@@ -81,6 +89,16 @@
       },
       "": {
       "dataSource": "mainService",
+      "preload": true,
+      "settings": {
+        "updateGroupId": "updateGroup",
+        "operationMode": "Server",
+        "synchronizationMode": "None",
+        "autoExpandSelect": true
+      }
+    },
+    "loggedInUserModel":{
+      "dataSource": "loggedInUser",
       "preload": true,
       "settings": {
         "updateGroupId": "updateGroup",
