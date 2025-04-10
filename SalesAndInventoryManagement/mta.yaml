@@ -40,7 +40,7 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: SalesAndInventoryManagement-auth
-      - name: SalesAndInventoryManagement-hdi-container
+      - name: SalesAndInventoryManagement-hdi-container-2
       - name: SalesAndInventoryManagement-connectivity
       - name: html5_destination
       - name: SalesAndInventoryManagement-cloud-logging
@@ -57,7 +57,7 @@ modules:
     type: hdb
     path: gen/db
     requires:
-      - name: SalesAndInventoryManagement-hdi-container
+      - name: SalesAndInventoryManagement-hdi-container-2
       - name: SalesAndInventoryManagement-auth
   - name: comsapsalesinventorymanagementapp
     type: html5
@@ -80,7 +80,7 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
-  - name: SalesAndInventoryManagement-hdi-container
+  - name: SalesAndInventoryManagement-hdi-container-2
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
@@ -106,22 +106,22 @@ resources:
       service-plan: app-host
   - name: html5_destination
     type: org.cloudfoundry.managed-service
-    requires:
-      - name: srv-api
+    # requires:
+    #   - name: srv-api
     parameters:
       service: destination
       service-plan: lite
-      config:
-        version: 1.0.0
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            existing_destinations_policy: update
-            destinations:
-              - Name: SalesAndInventoryManagement-srv
-                URL: ~{srv-api/srv-url}
-                Authentication: NoAuthentication
-                Type: HTTP
-                ProxyType: Internet
-                HTML5.ForwardAuthToken: true
-                HTML5.DynamicDestination: true
+      # config:
+      #   version: 1.0.0
+      #   HTML5Runtime_enabled: true
+      #   init_data:
+      #     instance:
+      #       existing_destinations_policy: update
+      #       destinations:
+      #         - Name: SalesAndInventoryManagement-srv
+      #           URL: ~{srv-api/srv-url}
+      #           Authentication: NoAuthentication
+      #           Type: HTTP
+      #           ProxyType: Internet
+      #           HTML5.ForwardAuthToken: true
+      #           HTML5.DynamicDestination: true

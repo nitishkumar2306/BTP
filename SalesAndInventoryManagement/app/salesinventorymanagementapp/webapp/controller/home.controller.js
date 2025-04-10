@@ -11,17 +11,20 @@ sap.ui.define([
 
     return Controller.extend("com.sap.salesinventorymanagementapp.controller.home", {
         onInit() {
-            var oModel = this.getOwnerComponent().getModel("loggedInUserModel");
 
-            // Bind the context to fetch a single entity
-            var oContextBinding = oModel.bindContext("/currentUser");
+            // var oModel = this.getOwnerComponent().getModel();
+            //console.log(oModel.getData());
+            // var oModel = this.getOwnerComponent().getModel("loggedInUserModel");
+
+            // // Bind the context to fetch a single entity
+            // var oContextBinding = oModel.bindContext("/currentUser");
             
-            // Fetch data from backend
-            oContextBinding.requestObject().then(function(oData) {
-                console.log("Logged-in user details:", oData);
-            }).catch(function(oError) {
-                console.error("Error fetching user details:", oError);
-            });
+            // // Fetch data from backend
+            // oContextBinding.requestObject().then(function(oData) {
+            //     console.log("Logged-in user details:", oData);
+            // }).catch(function(oError) {
+            //     console.error("Error fetching user details:", oError);
+            // });
         },
         onCloseProductDataTableDialog: function () {
             this.byId("productDataTableDialog").close();
